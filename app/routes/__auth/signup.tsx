@@ -35,8 +35,6 @@ export let action: ActionFunction = async ({ request }) => {
     let user: User  | null = null;
     try {
         const { data, error } = await supabase.auth.api[ isSignIn ? 'signInWithEmail' : 'signUpWithEmail'](email?.toString()!, password?.toString()!)
-        console.log('data', data);
-        console.log('error', error);
         if(error) {
             errors.service = [ error.message ]
         } else {
@@ -52,9 +50,8 @@ export let action: ActionFunction = async ({ request }) => {
     }
 
     if (session) {
-        console.log('session', session);
 
-        return redirect('/salas', {
+        return redirect('/profile', {
             headers: {
                 "Set-Cookie": await supabaseToken.serialize(session.access_token, { expires: new Date(session?.expires_at!), maxAge: session.expires_in })
             }
@@ -70,5 +67,5 @@ export let action: ActionFunction = async ({ request }) => {
 
 export default function Auth() {
     const errors = useActionData<AuthCreds>()
-    return <AuthForm errors={errors} />
+    return <AuthForm isSignIn={false} errors={errors} />
 }

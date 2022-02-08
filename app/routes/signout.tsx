@@ -1,7 +1,7 @@
 import { ActionFunction, redirect } from "remix";
-import { supabase } from '../lib/supabase/supabase.server'
-import { supabaseToken } from '../cookies'
-import { getToken } from '../lib/auth'
+import { supabase } from '~/lib/supabase/supabase.server'
+import { supabaseToken } from '~/cookies'
+import { getToken } from '~/lib/auth'
 
 
 export let action: ActionFunction = async ({ request }) => {
