@@ -68,7 +68,7 @@ export let action: ActionFunction = async ({ request }) => {
 }
 
 
-export default function Auth() {
+export default function LoginPage() {
     const errors = useActionData<AuthCreds>()
     return <AuthForm errors={errors} />
 }
