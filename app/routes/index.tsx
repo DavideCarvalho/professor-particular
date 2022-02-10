@@ -142,7 +142,7 @@ export default function Index() {
           <p className="mt-2 text-lg text-center text-gray-600">
             Fizemos uma lista pra te falar como podemos te ajudar
           </p>
-          <div className="grid grid-cols-4 gap-8 mt-10 sm:grid-cols-8 lg:grid-cols-12 sm:px-8 xl:px-0">
+          <div className="grid grid-cols-8 gap-8 mt-10 sm:px-8 xl:px-0">
             <div className="relative flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 overflow-hidden bg-gray-100 sm:rounded-xl">
               <div className="p-3 text-white bg-blue-500 rounded-full">
                 <svg

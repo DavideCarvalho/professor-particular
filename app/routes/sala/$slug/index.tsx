@@ -65,36 +65,41 @@ const AulaPage = () => {
       <h1 className="text-2xl">{classroom.className}</h1>
       <div className="divider" />
       {user.role.name === 'PROFESSOR' && (
-        <Link to={`/aula/${classroom.slug}/nova-aula`}>
-          <button className="btn">+ aula</button>
-        </Link>
+        <div className="flex justify-end">
+          <Link to={`/aula/${classroom.slug}/nova-aula`}>
+            <button className="btn">+ aula</button>
+          </Link>
+        </div>
       )}
-      {lessons.map(
-        ({
-          id,
-          slug,
-          name,
-          link,
-          objectives,
-          documents,
-          student_feedback,
-          professor_feedback,
-        }: any) => (
-          <LessonCard
-            key={id}
-            id={id}
-            slug={slug}
-            professorId={user.role.name === 'PROFESSOR' ? user.id : undefined}
-            link={link}
-            name={name}
-            objectives={objectives}
-            documents={documents}
-            studentFeedback={student_feedback}
-            professorFeedback={professor_feedback}
-            isProfessor={user.role.name === 'PROFESSOR'}
-          />
-        )
-      )}
+
+      <div className="grid grid-cols-1 place-items-center">
+        {lessons.map(
+          ({
+            id,
+            slug,
+            name,
+            link,
+            objectives,
+            documents,
+            student_feedback,
+            professor_feedback,
+          }: any) => (
+            <LessonCard
+              key={id}
+              id={id}
+              slug={slug}
+              professorId={user.role.name === 'PROFESSOR' ? user.id : undefined}
+              link={link}
+              name={name}
+              objectives={objectives}
+              documents={documents}
+              studentFeedback={student_feedback}
+              professorFeedback={professor_feedback}
+              isProfessor={user.role.name === 'PROFESSOR'}
+            />
+          )
+        )}
+      </div>
     </AppLayout>
   );
 };
@@ -174,7 +179,7 @@ const LessonCard: FC<any> = ({
   }
 
   return (
-    <div className="card shadow-2xl">
+    <div className="card shadow-xl my-10 w-4/5">
       <div className="card-body">
         {showErrorUpdateFeedback && (
           <ErrorMessage
@@ -188,7 +193,7 @@ const LessonCard: FC<any> = ({
             <CallIcon url={link} />
           </div>
         </div>
-        <p>{objectives}</p>
+        <p className="my-4">{objectives}</p>
         <Feedback
           isProfessor={isProfessor}
           studentFeedback={studentFeedback}
@@ -223,7 +228,9 @@ const LessonCard: FC<any> = ({
             window.location.reload();
           }}
         />
-        <div className="grid grid-cols-4 gap-4 sm:grid-cols-2 sm:gap-0 content-center">
+        <div className="divider" />
+        <h3>Arquivos</h3>
+        <div className="grid grid-cols-4 gap-4 sm:grid-cols-2 sm:gap-0 content-center my-6">
           {documents.map(({ path, name }: any) => (
             <div className="flex items-center justify-center" key={path}>
               <AttachmentIcon
@@ -265,11 +272,12 @@ const LessonCard: FC<any> = ({
           </Link>
           <ModalChangeLessonLink
             onSubmit={async (link) => {
+              const linkWithoutHttps = link.replace(/^https?:\/\//, '');
               const supabase = await getSupabaseClient();
               const { error } = await supabase
                 .from('lesson')
                 .update({
-                  link,
+                  link: `https://${linkWithoutHttps}`,
                 })
                 .match({ id });
               if (error) {
@@ -315,7 +323,7 @@ const Feedback: FC<FeedbackProps> = ({
     useState(false);
   if (isProfessor) {
     return (
-      <div className="flex gap-4">
+      <div className="grid grid-cols-2 gap-8 place-items-center">
         <Modal
           title="Feedback do professor"
           text={professorFeedback}
@@ -335,7 +343,7 @@ const Feedback: FC<FeedbackProps> = ({
         <button
           onClick={() => setStudentFeedbackModalOpen(true)}
           disabled={!studentFeedback}
-          className="btn btn-outline flex-auto"
+          className="btn btn-outline w-full"
         >
           {studentFeedback
             ? 'Ver auto avaliação do aluno'
@@ -344,14 +352,14 @@ const Feedback: FC<FeedbackProps> = ({
         {professorFeedback ? (
           <button
             onClick={() => setProfessorFeedbackModalOpen(true)}
-            className="btn btn-outline flex-auto"
+            className="btn btn-outline w-full"
           >
             Seu feedback
           </button>
         ) : (
           <button
             onClick={() => setProfessorFeedbackModalOpen(true)}
-            className="btn btn-outline flex-auto"
+            className="btn btn-outline w-full"
           >
             Adicionar feedback
           </button>
@@ -360,7 +368,7 @@ const Feedback: FC<FeedbackProps> = ({
     );
   }
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-2 gap-8 place-items-center">
       <SimpleModal
         title="Feedback do professor"
         text={professorFeedback}
@@ -379,7 +387,7 @@ const Feedback: FC<FeedbackProps> = ({
       />
       {studentFeedback ? (
         <button
-          className="btn btn-outline flex-auto"
+          className="btn btn-outline w-full"
           onClick={() => setStudentFeedbackModalOpen(true)}
         >
           Ver sua auto avaliação
@@ -387,14 +395,14 @@ const Feedback: FC<FeedbackProps> = ({
       ) : (
         <button
           onClick={() => setStudentFeedbackModalOpen(true)}
-          className="btn btn-outline flex-auto"
+          className="btn btn-outline w-full"
         >
           Adicionar auto avaliação
         </button>
       )}
 
       <button
-        className="btn btn-outline flex-auto"
+        className="btn btn-outline w-full"
         disabled={
           !professorFeedback ||
           ((professorFeedback && !studentFeedback) as boolean)
@@ -513,7 +521,7 @@ const AttachmentIcon: FC<AttachmentIconProps> = ({
         onClick={() => setSeeActions(true)}
       >
         <Icon />
-        {name}
+        {name.split('.').slice(0, -1).join('.')}
       </button>
       {seeActions && (
         <div
