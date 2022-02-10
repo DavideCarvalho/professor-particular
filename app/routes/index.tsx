@@ -5,6 +5,7 @@ import {
   MdOutlineUploadFile,
 } from 'react-icons/md';
 import { Link } from 'remix';
+import { Form } from '@remix-run/react';
 
 export default function Index() {
   const [showMenu, setShowMenu] = useState(false);
@@ -294,31 +295,36 @@ export default function Index() {
                 <h3 className="mb-6 text-2xl font-medium text-center">
                   Crie sua conta
                 </h3>
-                <input
-                  type="text"
-                  name="email"
-                  className="block w-full px-4 py-3 mb-4 border border-2 border-transparent border-gray-200 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none"
-                  placeholder="Email address"
-                />
-                <input
-                  type="password"
-                  name="password"
-                  className="block w-full px-4 py-3 mb-4 border border-2 border-transparent border-gray-200 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none"
-                  placeholder="Password"
-                  style={{
-                    cursor: 'auto',
-                    backgroundSize: '20px 20px !important',
-                    backgroundPosition: '98% 50% !important',
-                    backgroundRepeat: 'no-repeat !important',
-                    backgroundImage:
-                      'url("chrome-extension://ehpbfbahieociaeckccnklpdcmfaeegd/Icon-20.png") !important',
-                  }}
-                />
-                <div className="block">
-                  <button className="w-full px-3 py-4 font-medium text-white bg-blue-600 rounded-lg">
-                    Criar
-                  </button>
-                </div>
+                <Form method="post" action="/cadastrar">
+                  <input
+                    type="text"
+                    name="email"
+                    className="block w-full px-4 py-3 mb-4 border border-2 border-transparent border-gray-200 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none"
+                    placeholder="meu@email.com"
+                  />
+                  <input
+                    type="password"
+                    name="password"
+                    className="block w-full px-4 py-3 mb-4 border border-2 border-transparent border-gray-200 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none"
+                    placeholder="********"
+                    style={{
+                      cursor: 'auto',
+                      backgroundSize: '20px 20px !important',
+                      backgroundPosition: '98% 50% !important',
+                      backgroundRepeat: 'no-repeat !important',
+                      backgroundImage:
+                        'url("chrome-extension://ehpbfbahieociaeckccnklpdcmfaeegd/Icon-20.png") !important',
+                    }}
+                  />
+                  <div className="block">
+                    <button
+                      type="submit"
+                      className="w-full px-3 py-4 font-medium text-white bg-blue-600 rounded-lg"
+                    >
+                      Criar
+                    </button>
+                  </div>
+                </Form>
                 <p className="w-full mt-4 text-sm text-center text-gray-500">
                   Já tem sua conta?{' '}
                   <Link to="/login" className="text-blue-500 underline">

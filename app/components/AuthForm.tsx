@@ -86,9 +86,7 @@ function AuthForm({
             <button
               type="button"
               title="Sign Up"
-              onClick={() => {
-                setIsSignIn(!isSignIn);
-              }}
+              onClick={() => setIsSignIn(!isSignIn)}
             >
               {isSignIn ? `Cadastre-se!` : `Entre aqui!`}
             </button>
