@@ -51,7 +51,7 @@ export let action: ActionFunction = async ({ request }) => {
 
     if (session) {
 
-        return redirect('/profile', {
+        return redirect('/salas', {
             headers: {
                 "Set-Cookie": await supabaseToken.serialize(session.access_token, { expires: new Date(session?.expires_at!), maxAge: session.expires_in })
             }
