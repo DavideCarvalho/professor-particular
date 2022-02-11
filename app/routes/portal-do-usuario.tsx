@@ -9,8 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const [url, queryString] = request.url.split('?');
-  const { productId, userId } = qs.parse(queryString) as {
-    productId: string;
+  const { userId } = qs.parse(queryString) as {
     userId: string;
   };
   const { data, error } = await supabase
@@ -21,13 +20,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!data || error) {
     throw new Error('User not found');
   }
-  console.log('url', url);
-  const [urlWithoutSufix] = url.split('/');
-  console.log('returnUrl', `${urlWithoutSufix}/salas`);
+  const [, , urlWithoutSufix] = url.split('/');
   const session = await stripe.billingPortal.sessions.create({
     customer: data.stripe_id,
     locale: 'pt-BR',
-    return_url: `${urlWithoutSufix}/salas`,
+    return_url: `https://${urlWithoutSufix}/salas`,
   });
   return redirect(session.url!);
 };
