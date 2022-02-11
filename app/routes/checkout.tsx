@@ -1,6 +1,7 @@
 import { LoaderFunction, redirect } from 'remix';
 import Stripe from 'stripe';
 import qs from 'qs';
+import { supabase } from '~/lib/supabase/supabase.server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: '2020-08-27',
@@ -8,9 +9,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const [url, queryString] = request.url.split('?');
-  const { productId } = qs.parse(queryString) as { productId: string };
+  const { productId, userId } = qs.parse(queryString) as {
+    productId: string;
+    userId: string;
+  };
+  const { data, error } = await supabase
+    .from('user')
+    .select('email')
+    .match({ id: userId })
+    .single();
+  if (!data || error) {
+    throw new Error('User not found');
+  }
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
+    customer_email: data.email,
     line_items: [
       {
         price: productId,
