@@ -1,5 +1,10 @@
 import { ActionFunction, json, LoaderFunction } from 'remix';
 import Stripe from 'stripe';
+import { supabase } from '~/lib/supabase/supabase.server';
+import {
+  InvoicePaidStripeWebhook,
+  InvoicePaidStripeWebhookData,
+} from '~/dto/invoice-paid-stripe-webhook.dto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: '2020-08-27',
@@ -18,12 +23,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 const postLoader: LoaderFunction = async ({ request }) => {
   let data;
   let eventType;
-  const chunks: any = []
-  for await (const chunk of (request.body! as unknown as Iterable<ReadableStream>)) {
-    chunks.push(chunk);
-  }
-  const buffer = Buffer.concat(chunks);
-  // const body = await request.text();
+  const body = await request.json();
   // Check if webhook signing is configured.
   const webhookSecret = process.env.WEBHOOK_SECRET;
   if (webhookSecret) {
@@ -36,7 +36,7 @@ const postLoader: LoaderFunction = async ({ request }) => {
       // console.log('signature', signature);
       // console.log('webhookSecret', webhookSecret);
       event = await stripe.webhooks.constructEventAsync(
-        buffer,
+        body,
         signature,
         webhookSecret
       );
@@ -62,10 +62,20 @@ const postLoader: LoaderFunction = async ({ request }) => {
       console.log('to aqui, olha o usuário pagante que irado', data);
       break;
     case 'invoice.paid':
+      const invoicePaidData: InvoicePaidStripeWebhookData = data;
       // Continue to provision the subscription as payments continue to be made.
       // Store the status in your database and check when a user accesses your service.
       // This approach helps you avoid hitting rate limits.
-      console.log('Caraí, continuou pagando', data);
+      const subscriptionId = invoicePaidData.object.lines.data[0].subscription;
+      const customerEmail = invoicePaidData.object.customer_email;
+      const { data: updatedUser, error } = await supabase
+        .from('user')
+        .update({ subscription_id: subscriptionId })
+        .match({ email: customerEmail })
+        .single();
+      if (!updatedUser || error) {
+        return json(null, { status: 500 });
+      }
       break;
     case 'invoice.payment_failed':
       // The payment failed or the customer does not have a valid payment method.
