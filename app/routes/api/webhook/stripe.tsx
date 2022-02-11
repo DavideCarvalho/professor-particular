@@ -5,10 +5,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: '2020-08-27',
 });
 
+// function stream2buffer(stream: ReadableStream) {
+//   return new Promise((resolve, reject) => {
+//     const _buf: any[] = [];
+//
+//     stream.on('data', (chunk) => _buf.push(chunk));
+//     stream.on('end', () => resolve(Buffer.concat(_buf)));
+//     stream.on('error', (err) => reject(err));
+//   });
+// }
+
 const postLoader: LoaderFunction = async ({ request }) => {
   let data;
   let eventType;
-  const body = await request.text();
+  const chunks: any = []
+  for await (const chunk of (request.body! as unknown as Iterable<ReadableStream>)) {
+    chunks.push(chunk);
+  }
+  const buffer = Buffer.concat(chunks);
+  // const body = await request.text();
   // Check if webhook signing is configured.
   const webhookSecret = process.env.WEBHOOK_SECRET;
   if (webhookSecret) {
@@ -17,11 +32,11 @@ const postLoader: LoaderFunction = async ({ request }) => {
     let signature = request.headers.get('stripe-signature') as string;
 
     try {
-      console.log('body', body);
-      console.log('signature', signature);
-      console.log('webhookSecret', webhookSecret);
+      // console.log('body', body);
+      // console.log('signature', signature);
+      // console.log('webhookSecret', webhookSecret);
       event = await stripe.webhooks.constructEventAsync(
-        body,
+        buffer,
         signature,
         webhookSecret
       );
