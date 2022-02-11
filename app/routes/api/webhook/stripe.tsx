@@ -8,19 +8,27 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 const postLoader: LoaderFunction = async ({ request }) => {
   let data;
   let eventType;
-  const body = await request.json();
+  const body = await request.text();
   // Check if webhook signing is configured.
-  const webhookSecret = 'whsec_15YxcXiaTot2OdoEBfRMHOOkcOljZCaB';
+  const webhookSecret = process.env.WEBHOOK_SECRET;
   if (webhookSecret) {
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
     let signature = request.headers.get('stripe-signature') as string;
 
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      console.log('body', body);
+      console.log('signature', signature);
+      console.log('webhookSecret', webhookSecret);
+      event = await stripe.webhooks.constructEventAsync(
+        body,
+        signature,
+        webhookSecret
+      );
     } catch (err) {
+      // console.log(JSON.stringify(err));
       console.log(`⚠️  Webhook signature verification failed.`);
-      return json(null, { status: 400 });
+      return json(err, { status: 400 });
     }
     // Extract the object from the event.
     data = event.data;
