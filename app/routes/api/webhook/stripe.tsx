@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from 'remix';
+import { ActionFunction, json, LoaderFunction } from 'remix';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
@@ -61,5 +61,12 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   if (request.method.toUpperCase() === 'POST') {
     return postLoader({ request, params, context });
   }
-  return null;
+  return json({ message: 'Method not implemented' }, { status: 501 });
+};
+
+export const action: ActionFunction = async ({ request, params, context }) => {
+  if (request.method.toUpperCase() === 'POST') {
+    return postLoader({ request, params, context });
+  }
+  return json({ message: 'Method not implemented' }, { status: 501 });
 };
