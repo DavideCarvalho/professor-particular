@@ -1,10 +1,11 @@
 import { ActionFunction, json, LoaderFunction } from 'remix';
 import Stripe from 'stripe';
 import { supabase } from '~/lib/supabase/supabase.server';
+import { InvoicePaidStripeWebhookData } from '~/dto/invoice-paid-stripe-webhook.dto';
 import {
-  InvoicePaidStripeWebhook,
-  InvoicePaidStripeWebhookData,
-} from '~/dto/invoice-paid-stripe-webhook.dto';
+  CheckoutSessionCompletedDataStripeWebhook,
+  CheckoutSessionCompletedStripeWebhook,
+} from '~/dto/checkout-session-completed-stripe-webhook.dto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: '2020-08-27',
@@ -55,28 +56,46 @@ const postLoader: LoaderFunction = async ({ request }) => {
     eventType = body.type;
   }
 
+  let stripeCustomerId;
+  let customerEmail;
+
   switch (eventType) {
     case 'checkout.session.completed':
+      const checkoutSessionCompletedStripeWebhook: CheckoutSessionCompletedDataStripeWebhook =
+        data;
+      stripeCustomerId = checkoutSessionCompletedStripeWebhook.object.customer;
+      customerEmail =
+        checkoutSessionCompletedStripeWebhook.object.customer_email;
       // Payment is successful and the subscription is created.
       // You should provision the subscription and save the customer ID to your database.
-      console.log('to aqui, olha o usuário pagante que irado', data);
-      break;
+      const {
+        data: updatedUserCheckoutCompleted,
+        error: errorCheckoutCompleted,
+      } = await supabase
+        .from('user')
+        .update({ stripe_id: stripeCustomerId })
+        .match({ email: customerEmail })
+        .single();
+      if (!updatedUserCheckoutCompleted || errorCheckoutCompleted) {
+        return json(null, { status: 500 });
+      }
+      return json(null, { status: 200 });
     case 'invoice.paid':
       const invoicePaidData: InvoicePaidStripeWebhookData = data;
       // Continue to provision the subscription as payments continue to be made.
       // Store the status in your database and check when a user accesses your service.
       // This approach helps you avoid hitting rate limits.
-      const subscriptionId = invoicePaidData.object.lines.data[0].subscription;
-      const customerEmail = invoicePaidData.object.customer_email;
+      stripeCustomerId = invoicePaidData.object.customer;
+      customerEmail = invoicePaidData.object.customer_email;
       const { data: updatedUser, error } = await supabase
         .from('user')
-        .update({ subscription_id: subscriptionId })
+        .update({ stripe_id: stripeCustomerId })
         .match({ email: customerEmail })
         .single();
       if (!updatedUser || error) {
         return json(null, { status: 500 });
       }
-      break;
+      return json(null, { status: 200 });
     case 'invoice.payment_failed':
       // The payment failed or the customer does not have a valid payment method.
       // The subscription becomes past_due. Notify your customer and send them to the
