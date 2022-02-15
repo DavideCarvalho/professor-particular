@@ -13,7 +13,7 @@ type StudentsAttrs = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  if (!(await isAuthenticated(request))) return redirect('/auth');
+  if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data: foundUser, error: foundUserError } = await supabase
     .from('user')
@@ -26,7 +26,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     .match({ id: user.id })
     .single();
   if (!foundUser || foundUserError) {
-    return redirect('/auth');
+    return redirect('/login');
   }
   const { role } = foundUser;
   const { data: students, error } = await supabase
@@ -61,11 +61,13 @@ export default function ProfessorStudentsPage() {
     <AppLayout user={user}>
       <div className="flex flex-col justify-center items-center relative">
         <h1 className="text-5xl">Salas</h1>
+        <div className="flex justify-end w-full">
+          <a className="btn">Criar sala</a>
+        </div>
         <div className="py-8 grid grid-cols-1 w-full">
           <div>
             {students.map(
               ({ studentName, className, classSlug, professorName }) => (
-                <>
                 <Card
                   key={classSlug}
                   title={className}
@@ -75,7 +77,6 @@ export default function ProfessorStudentsPage() {
                   buttonLocation={`/sala/${classSlug}`}
                   buttonLabel="Entrar"
                 />
-                </>
               )
             )}
           </div>

@@ -12,7 +12,7 @@ import { ChangeEventHandler, FC } from 'react';
 import { supabase } from '~/lib/supabase/supabase.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  if (!(await isAuthenticated(request))) return redirect('/auth');
+  if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data, error } = await supabase
     .from('professor_has_student')

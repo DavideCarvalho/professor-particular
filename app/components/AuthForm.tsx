@@ -1,5 +1,5 @@
-import { PropsWithChildren, ReactElement, useState } from 'react';
-import { Form, useTransition } from 'remix';
+import { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
+import { Form, useSearchParams, useTransition } from 'remix';
 
 export type AuthCreds = {
   email?: string;
@@ -15,7 +15,28 @@ function AuthForm({
   isSignIn: isSignInProp = true,
   errors = {},
 }: PropsWithChildren<AuthFormProps>): ReactElement {
-  const [isSignIn, setIsSignIn] = useState(isSignInProp);
+  const [searchParams] = useSearchParams();
+  const [redirectTo, setRedirectTo] = useState<string>('/salas');
+  const [authUrl, setAuthUrl] = useState<string>('');
+
+  useEffect(() => {
+    console.log('redirectTo', searchParams.get('redirect_to'));
+    setRedirectTo(searchParams.get('redirect_to') ?? '/salas');
+  }, [searchParams, setRedirectTo]);
+
+  useEffect(() => {
+    console.log('toString', searchParams.toString());
+    console.log('redirectTo', searchParams.get('redirect_to'));
+    const redirectToQueryString = searchParams.get('redirect_to')
+      ? `?redirect_to=${redirectTo}`
+      : '';
+    console.log('redirectToQueryString', redirectToQueryString);
+    isSignInProp
+      ? setAuthUrl(`/cadastrar${redirectToQueryString}`)
+      : setAuthUrl(`/login${redirectToQueryString}`);
+
+    console.log('authUrl', authUrl);
+  }, [isSignInProp, setAuthUrl, redirectTo]);
   let transition = useTransition();
 
   return (
@@ -25,7 +46,7 @@ function AuthForm({
     >
       <fieldset>
         <legend className="text-purple-600 pb-4 text-4xl border-b mb-4">
-          {isSignIn ? `Entrar` : `Cadastrar`}
+          {isSignInProp ? `Entrar` : `Cadastrar`}
         </legend>
         <div className="h-3 text-xs">
           {errors?.service && errors.service.map((error) => error)}
@@ -48,7 +69,7 @@ function AuthForm({
           />
           <div className="h-3 text-xs">{errors?.email && errors.email}</div>
         </div>
-        <input type="hidden" name="is_sign_in" value={`${isSignIn}`} />
+        <input type="hidden" name="redirect_to" value={`${redirectTo}`} />
         <div className="w-full mb-6">
           <label
             className="block uppercase font-semibold text-gray-600 text-base"
@@ -76,20 +97,16 @@ function AuthForm({
             }`}
             disabled={transition.state === 'submitting'}
           >
-            {isSignIn ? `Sign In` : `Sign Up!`}
+            {isSignInProp ? `Entrar` : `Cadastrar!`}
           </button>
 
           <div className="text-right">
             <small className="block">
-              {isSignIn ? `Não tem uma conta?` : `Já tem conta?`}
+              {isSignInProp ? `Não tem uma conta?` : `Já tem conta?`}
             </small>
-            <button
-              type="button"
-              title="Sign Up"
-              onClick={() => setIsSignIn(!isSignIn)}
-            >
-              {isSignIn ? `Cadastre-se!` : `Entre aqui!`}
-            </button>
+            <a href={authUrl} title="Sign Up">
+              {isSignInProp ? `Cadastre-se!` : `Entre aqui!`}
+            </a>
           </div>
         </div>
       </fieldset>

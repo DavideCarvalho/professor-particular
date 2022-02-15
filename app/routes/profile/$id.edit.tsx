@@ -21,7 +21,7 @@ type ProfileAttrs = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  if (!(await isAuthenticated(request))) return redirect('/auth');
+  if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data: profile, error } = await supabase
     .from('user')

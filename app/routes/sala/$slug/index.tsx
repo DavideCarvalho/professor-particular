@@ -17,7 +17,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import { ModalChangeLessonLink } from '~/components/modal-change-lesson-link';
 
 export let loader: LoaderFunction = async ({ request }) => {
-  if (!(await isAuthenticated(request))) return redirect('/auth');
+  if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data: foundUser, error: foundUserError } = await supabase
     .from('user')
@@ -30,7 +30,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     .match({ id: user.id })
     .single();
   if (!foundUser || foundUserError) {
-    return redirect('/auth');
+    return redirect('/login');
   }
   const { role } = foundUser;
   const { data: classroom, error } = await supabase

@@ -2,12 +2,14 @@ import { LoaderFunction, redirect } from 'remix';
 import Stripe from 'stripe';
 import qs from 'qs';
 import { supabase } from '~/lib/supabase/supabase.server';
+import { isAuthenticated } from '~/lib/auth';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: '2020-08-27',
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
+  if (!(await isAuthenticated(request))) return redirect('/login');
   const [url, queryString] = request.url.split('?');
   const { productId, userId } = qs.parse(queryString) as {
     productId: string;
