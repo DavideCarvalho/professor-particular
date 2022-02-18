@@ -16,7 +16,7 @@ import { TiCancel } from 'react-icons/ti';
 import { MdOpenInNew } from 'react-icons/md';
 import { ModalChangeLessonLink } from '~/components/modal-change-lesson-link';
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data: foundUser, error: foundUserError } = await supabase
@@ -43,6 +43,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     `
     )
     .eq(role.name === 'PROFESSOR' ? 'professor_id' : 'student_id', user.id)
+    .eq('slug', params.slug)
     .single();
 
   const { data: lessons, error: lessonsError } = await supabase
