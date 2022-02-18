@@ -1,6 +1,5 @@
 import { createTransport } from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
+import { inviteEmail } from '~/lib/nodemailer/email-templates/invite-email';
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_SECRET = process.env.SMTP_SECRET;
@@ -13,12 +12,6 @@ const smtpTransport = createTransport({
     pass: SMTP_SECRET,
   },
 });
-
-const emailTemplatesPath = path.join(__dirname, '..', '..', 'email-templates');
-
-const inviteEmailAsString = fs
-  .readFileSync(path.join(emailTemplatesPath, 'invite-email.html'))
-  .toString();
 
 export async function sendInviteEmailToStudent({
   studentEmail,
@@ -33,7 +26,7 @@ export async function sendInviteEmailToStudent({
     from: 'professorparticular@naoresponder.com',
     to: studentEmail,
     subject: 'Você foi convidado para uma aula!',
-    html: inviteEmailAsString
+    html: inviteEmail
       .replace('{{ PROFESSOR_NAME }}', professorName)
       .replace('{{ CLASSROOM_NAME }}', classroomName),
   });
