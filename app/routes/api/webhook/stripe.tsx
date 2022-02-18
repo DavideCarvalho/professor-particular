@@ -66,7 +66,7 @@ const postLoader: LoaderFunction = async ({ request }) => {
         data;
       stripeCustomerId = checkoutSessionCompletedStripeWebhook.object.customer;
       customerEmail =
-        checkoutSessionCompletedStripeWebhook.object.customer_email;
+        checkoutSessionCompletedStripeWebhook.object.customer_details.email;
       // Payment is successful and the subscription is created.
       // You should provision the subscription and save the customer ID to your database.
       const {
