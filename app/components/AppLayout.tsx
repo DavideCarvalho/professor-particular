@@ -7,10 +7,7 @@ type AppLayoutProps = {
   user?: User;
 };
 
-export const AppLayout: FC<AppLayoutProps> = ({
-  user,
-  children,
-}) => {
+export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
   const transition = useTransition();
   return (
     <div className="drawer min-h-screen min-w-screen">
@@ -28,19 +25,18 @@ export const AppLayout: FC<AppLayoutProps> = ({
             <Link to="/salas">Salas</Link>
           </li>
           <li>
-            <a>
-              <Form method="post" action="/signout">
-                <button
-                  type="submit"
-                  disabled={transition.state === 'submitting'}
-                >
-                  Sair
-                </button>
-              </Form>
-            </a>
+            <Form method="post" action="/signout">
+              <button
+                className="w-full text-left"
+                type="submit"
+                disabled={transition.state === 'submitting'}
+              >
+                Sair
+              </button>
+            </Form>
           </li>
         </ul>
       </div>
     </div>
   );
-}
+};

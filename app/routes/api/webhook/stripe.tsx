@@ -61,6 +61,7 @@ const postLoader: LoaderFunction = async ({ request }) => {
 
   switch (eventType) {
     case 'checkout.session.completed':
+    case 'invoice.paid':
       const checkoutSessionCompletedStripeWebhook: CheckoutSessionCompletedDataStripeWebhook =
         data;
       stripeCustomerId = checkoutSessionCompletedStripeWebhook.object.customer;
@@ -76,24 +77,14 @@ const postLoader: LoaderFunction = async ({ request }) => {
         .update({ stripe_id: stripeCustomerId })
         .match({ email: customerEmail })
         .single();
-      if (!updatedUserCheckoutCompleted || errorCheckoutCompleted) {
-        return json(null, { status: 500 });
+      if (!updatedUserCheckoutCompleted) {
+        return json(
+          { message: `User with e-mail ${customerEmail} not found` },
+          { status: 404 }
+        );
       }
-      return json(null, { status: 200 });
-    case 'invoice.paid':
-      const invoicePaidData: InvoicePaidStripeWebhookData = data;
-      // Continue to provision the subscription as payments continue to be made.
-      // Store the status in your database and check when a user accesses your service.
-      // This approach helps you avoid hitting rate limits.
-      stripeCustomerId = invoicePaidData.object.customer;
-      customerEmail = invoicePaidData.object.customer_email;
-      const { data: updatedUser, error } = await supabase
-        .from('user')
-        .update({ stripe_id: stripeCustomerId })
-        .match({ email: customerEmail })
-        .single();
-      if (!updatedUser || error) {
-        return json(null, { status: 500 });
+      if (errorCheckoutCompleted) {
+        return json(errorCheckoutCompleted, { status: 500 });
       }
       return json(null, { status: 200 });
     case 'invoice.payment_failed':
