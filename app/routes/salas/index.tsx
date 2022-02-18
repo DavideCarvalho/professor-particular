@@ -1,5 +1,4 @@
-import { LoaderFunction, redirect, useLoaderData, Form } from 'remix';
-import { User } from '@supabase/supabase-js';
+import {LoaderFunction, redirect, useLoaderData, Form, Link} from 'remix';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 import { Card } from '~/components/Card';
@@ -30,21 +29,22 @@ export let loader: LoaderFunction = async ({ request }) => {
   }
   const { role } = foundUser;
   const { data: students, error } = await supabase
-    .from('professor_has_student')
+    .from('classroom')
     .select(
       `
       className: name,
       classSlug: slug,
-      student: professor_has_student_student_id_fkey(username),
-      professor: professor_has_student_professor_id_fkey(username)
+      student: classroom_student_id_fkey(name),
+      professor: classroom_professor_id_fkey(name)
     `
     )
     .eq(role.name === 'PROFESSOR' ? 'professor_id' : 'student_id', user.id);
+
   return {
     students: students?.map(({ student, className, classSlug, professor }) => {
       return {
-        studentName: student.username,
-        professorName: professor.username,
+        studentName: student?.name,
+        professorName: professor.name,
         className,
         classSlug,
       };
@@ -62,7 +62,7 @@ export default function ProfessorStudentsPage() {
       <div className="flex flex-col justify-center items-center relative">
         <h1 className="text-5xl">Salas</h1>
         <div className="flex justify-end w-full">
-          <a className="btn">Criar sala</a>
+          <Link to="nova-sala" className="btn">+ sala</Link>
         </div>
         <div className="py-8 grid grid-cols-1 w-full">
           <div>

@@ -43,10 +43,16 @@ export default function Index() {
                       Inicio
                     </a>
                     <a
-                      href="#features"
+                      href="#funcionalidades"
                       className="inline-block w-full py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center"
                     >
                       Funcionalidades
+                    </a>
+                    <a
+                      href="#preco"
+                      className="inline-block w-full py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center"
+                    >
+                      Preço
                     </a>
                   </div>
                   <div className="flex flex-col items-start justify-end w-full pt-4 md:items-center md:w-1/3 md:flex-row md:py-0">
@@ -116,7 +122,7 @@ export default function Index() {
             <div className="flex flex-col items-center mt-12 text-center">
               <span className="relative inline-flex w-full md:w-auto">
                 <a
-                  href="#pricing"
+                  href="#preco"
                   type="button"
                   className="inline-flex items-center justify-center w-full px-8 py-4 text-base font-bold leading-6 text-white bg-indigo-600 border border-transparent rounded-full md:w-auto hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                 >
@@ -126,7 +132,7 @@ export default function Index() {
                   a partir de R$10/mês
                 </span>
               </span>
-              <a href="#features" className="mt-3 text-sm text-indigo-500">
+              <a href="#funcionalidades" className="mt-3 text-sm text-indigo-500">
                 Veja mais!
               </a>
             </div>
@@ -134,7 +140,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-20 bg-white" id="features">
+      <section className="py-20 bg-white" id="funcionalidades">
         <div className="container max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold tracking-tight text-center">
             Funcionalidades!
@@ -339,7 +345,7 @@ export default function Index() {
 
       <section
         className="py-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-24"
-        id="pricing"
+        id="preco"
       >
         <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-7xl">
           <div className="flex flex-col items-center leading-7 text-center text-gray-900 border-0 border-gray-200">

@@ -34,7 +34,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   }
   const { role } = foundUser;
   const { data: classroom, error } = await supabase
-    .from('professor_has_student')
+    .from('classroom')
     .select(
       `
       className: name,

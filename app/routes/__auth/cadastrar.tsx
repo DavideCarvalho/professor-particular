@@ -17,7 +17,6 @@ export let action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get('email');
   const password = form.get('password');
-  const redirectTo = form.get('redirect_to') as string;
 
   let errors: AuthCreds & { service: string[] } = {
     email: undefined,

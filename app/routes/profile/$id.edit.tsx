@@ -16,7 +16,7 @@ import { getSupabaseClient } from '~/lib/supabase/supabase.client';
 import { AppLayout } from '~/components/AppLayout';
 
 type ProfileAttrs = {
-  username?: string;
+  name?: string;
   avatar_url?: string;
 };
 
@@ -25,7 +25,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const { user } = await getUserByRequestToken(request);
   const { data: profile, error } = await supabase
     .from('user')
-    .select(`username, avatar_url`)
+    .select(`name, avatar_url`)
     .eq('id', params.id)
     .single();
   if (!profile)
@@ -38,13 +38,13 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 export let action: ActionFunction = async ({ request }) => {
   const { user } = await getUserByRequestToken(request);
   const form = await request.formData();
-  const username = form.get('username');
+  const name = form.get('name');
   let errors: Omit<ProfileAttrs, 'avatar_url'> & { service?: Array<string> } =
     {};
 
-  if (typeof username !== 'string' || username.length < 3) {
+  if (typeof name !== 'string' || name.length < 3) {
     // BYOV - Bring your own validation
-    errors.username = 'fill-in a valid username!';
+    errors.name = 'fill-in a valid name!';
   }
 
   if (Object.keys(errors).length) {
@@ -54,7 +54,7 @@ export let action: ActionFunction = async ({ request }) => {
   try {
     const { error } = await supabase
       .from('profiles')
-      .upsert({ username, id: user.id, updated_at: new Date() });
+      .upsert({ name, id: user.id, updated_at: new Date() });
     if (error) {
       errors.service = [error.message];
     }
@@ -120,7 +120,7 @@ export default function ProfileEdit() {
                   <img
                     className="w-36 h-36 object-cover rounded-full shadow-lg"
                     src={avatarUrl}
-                    alt={profile?.username}
+                    alt={profile?.name}
                   />
                 </div>
                 <label className="block" htmlFor="avatar-upload">
@@ -156,21 +156,21 @@ export default function ProfileEdit() {
                 <div className="w-full mb-6">
                   <label
                     className="block uppercase font-semibold text-gray-600 text-base"
-                    htmlFor="username"
+                    htmlFor="name"
                   >
-                    Username
+                    Name
                   </label>
                   <input
-                    id="username"
+                    id="name"
                     className="w-full font-normal border py-2 px-4 text-gray-700 hover:bg-gray-50 focus:border-indigo-500 rounded-md focus:outline-none"
-                    name="username"
+                    name="name"
                     type="text"
                     required
-                    placeholder="your username"
-                    defaultValue={profile.username}
+                    placeholder="your name"
+                    defaultValue={profile.name}
                   />
                   <div className="h-3 text-xs">
-                    {errors?.username && errors.username}
+                    {errors?.name && errors.name}
                   </div>
                 </div>
                 <div className="w-full mb-6 flex flex-col justify-between place-items-center">

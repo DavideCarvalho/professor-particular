@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
   const { data, error } = await supabase
-    .from('professor_has_student')
+    .from('classroom')
     .select('*')
     .match({ slug: params.slug })
     .single();
@@ -50,7 +50,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { data, error } = await supabase
-    .from('professor_has_student')
+    .from('classroom')
     .select('*')
     .match({ slug: params.slug })
     .single();

@@ -5,7 +5,7 @@ import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 
 type ProfileAttrs = {
-  username?: string;
+  name?: string;
   website?: string;
   avatar_url?: string;
 };
@@ -17,7 +17,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     .from('user')
     .select(
       `
-      username,
+      name,
       avatar_url,
       role(name)`
     )
@@ -40,13 +40,13 @@ export default function Profile() {
                   <img
                     className="w-36 h-36 object-cover rounded-full shadow-lg"
                     src={profile.avatar_url}
-                    alt={profile?.username}
+                    alt={profile?.name}
                   />
                 </div>
               </div>
             </div>
             <div className="profile-detail my-4 flex flex-col place-items-center">
-              <h2 className="text-4xl mb-1">Howdie, {profile?.username}!</h2>
+              <h2 className="text-4xl mb-1">Howdie, {profile?.name}!</h2>
               <br />
               <Link
                 className="px-4 py-1 rounded-md text-white bg-indigo-500 shadow-lg shadow-indigo-500/50"
