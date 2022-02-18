@@ -9,8 +9,8 @@ const smtpTransport = createTransport({
   host: 'smtp-relay.sendinblue.com',
   port: 587,
   auth: {
-    user: 'davi_carvalho96@hotmail.com',
-    pass: 'PgjRYkZWOwMTSh5A',
+    user: SMTP_USER,
+    pass: SMTP_SECRET,
   },
 });
 

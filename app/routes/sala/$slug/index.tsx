@@ -37,6 +37,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     .from('classroom')
     .select(
       `
+      id,
       className: name,
       slug
     `
@@ -52,7 +53,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     documents(path, name)
     `
     )
-    .eq(role.name === 'PROFESSOR' ? 'professor_id' : 'student_id', user.id)
+    .match({ classroom_id: classroom.id })
     .order('created_at', { ascending: false });
 
   return { classroom, lessons, user: foundUser };
@@ -72,6 +73,13 @@ const AulaPage = () => {
         </div>
       )}
 
+      {!lessons.length && (
+        <div className="grid grid-cols-1 place-items-center w-full h-full">
+          <h1 className="text-xl">
+            Oh oh, parece que ainda não tem nenhuma aula!
+          </h1>
+        </div>
+      )}
       <div className="grid grid-cols-1 place-items-center">
         {lessons.map(
           ({
