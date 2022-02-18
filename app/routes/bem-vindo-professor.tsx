@@ -4,7 +4,7 @@ import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { useEffect, useState } from 'react';
 
-const WelcomeStudentPage = () => {
+const WelcomeProfessorPage = () => {
   const { height, width } = useWindowSize();
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -16,7 +16,7 @@ const WelcomeStudentPage = () => {
       <div className="flex flex-col w-full h-full justify-center content-center place-items-center">
         <PartyPopperEmoji className="h-64" />
         <h1 className="text-4xl font-bold">
-          Bem vindo aluno ao Professor Particular!
+          Bem vindo professor ao Professor Particular!
         </h1>
 
         <h1 className="text-2xl mt-10 break-words">
@@ -28,4 +28,4 @@ const WelcomeStudentPage = () => {
   );
 };
 
-export default WelcomeStudentPage;
+export default WelcomeProfessorPage;

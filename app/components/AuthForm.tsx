@@ -20,22 +20,16 @@ function AuthForm({
   const [authUrl, setAuthUrl] = useState<string>('');
 
   useEffect(() => {
-    console.log('redirectTo', searchParams.get('redirect_to'));
     setRedirectTo(searchParams.get('redirect_to') ?? '/salas');
   }, [searchParams, setRedirectTo]);
 
   useEffect(() => {
-    console.log('toString', searchParams.toString());
-    console.log('redirectTo', searchParams.get('redirect_to'));
     const redirectToQueryString = searchParams.get('redirect_to')
       ? `?redirect_to=${redirectTo}`
       : '';
-    console.log('redirectToQueryString', redirectToQueryString);
     isSignInProp
       ? setAuthUrl(`/cadastrar${redirectToQueryString}`)
       : setAuthUrl(`/login${redirectToQueryString}`);
-
-    console.log('authUrl', authUrl);
   }, [isSignInProp, setAuthUrl, redirectTo]);
   let transition = useTransition();
 
@@ -46,12 +40,30 @@ function AuthForm({
     >
       <fieldset>
         <legend className="text-purple-600 pb-4 text-4xl border-b mb-4">
-          {isSignInProp ? `Entrar` : `Cadastrar`}
+          {isSignInProp ? `Olá professor, entre!` : `Cadastro de professor`}
         </legend>
         <div className="h-3 text-xs">
           {errors?.service && errors.service.map((error) => error)}
         </div>
         <br />
+        {!isSignInProp && (
+          <div className="w-full mb-6">
+            <label
+              className="block uppercase font-semibold text-gray-600 text-base"
+              htmlFor="name"
+            >
+              Nome
+            </label>
+            <input
+              id="name"
+              className="w-full font-normal border py-2 px-4 text-gray-700 hover:bg-gray-50 focus:border-indigo-500 rounded-md focus:outline-none"
+              name="name"
+              type="text"
+              required
+              placeholder="Nome"
+            />
+          </div>
+        )}
         <div className="w-full mb-6">
           <label
             className="block uppercase font-semibold text-gray-600 text-base"
@@ -65,7 +77,7 @@ function AuthForm({
             name="email"
             type="email"
             required
-            placeholder="your email"
+            placeholder="seu@email.com"
           />
           <div className="h-3 text-xs">{errors?.email && errors.email}</div>
         </div>
@@ -83,7 +95,7 @@ function AuthForm({
             name="password"
             type="password"
             required
-            placeholder="Your password."
+            placeholder="************"
           />
           <div className="h-3 text-xs">
             {errors?.password && errors.password}

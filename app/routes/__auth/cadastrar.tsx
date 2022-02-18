@@ -2,7 +2,6 @@ import type { ActionFunction } from 'remix';
 import type { Session, User } from '@supabase/supabase-js';
 import { useActionData, MetaFunction, redirect, json } from 'remix';
 import AuthForm, { AuthCreds } from '../../components/AuthForm';
-import { supabaseToken } from '~/cookies';
 import { supabase } from '~/lib/supabase/supabase.server';
 
 // https://remix.run/api/conventions#meta
@@ -16,6 +15,7 @@ export let meta: MetaFunction = () => {
 export let action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get('email');
+  const name = form.get('name');
   const password = form.get('password');
 
   let errors: AuthCreds & { service: string[] } = {
@@ -48,8 +48,24 @@ export let action: ActionFunction = async ({ request }) => {
     errors.service = [error.message];
   }
 
-  if (Object.keys(errors).length) {
+  if (errors.password || errors.email || errors.service.length) {
     return json(errors, { status: 422 });
+  }
+
+  const { data: role, error: errorFindingRole } = await supabase
+    .from('role')
+    .select('id')
+    .match({ name: 'PROFESSOR' })
+    .single();
+
+  const { error: errorInsertingUser } = await supabase
+    .from('user')
+    .insert({ id: user!.id, role_id: role.id, name, email })
+    .single();
+
+  if (errorInsertingUser) {
+    console.log('errorInsertingUser', errorInsertingUser);
+    return;
   }
 
   // if (session) {
@@ -64,7 +80,7 @@ export let action: ActionFunction = async ({ request }) => {
   // }
   if (user) {
     // @TODO: improve this!
-    return redirect('/bem-vindo', {});
+    return redirect('/bem-vindo-professor', {});
   }
   return redirect('/login');
 };

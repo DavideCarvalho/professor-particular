@@ -1,8 +1,7 @@
 import type { ActionFunction, LoaderFunction } from 'remix';
-import type { Session, User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 import { useActionData, MetaFunction, redirect, json } from 'remix';
-import AuthForm, { AuthCreds } from '../../../components/AuthForm';
-import { supabaseToken } from '~/cookies';
+import { AuthCreds } from '~/components/AuthForm';
 import { supabase } from '~/lib/supabase/supabase.server';
 import SignUpStudentForm from '~/components/SignUpStudentForm';
 
@@ -34,10 +33,6 @@ export let action: ActionFunction = async ({ request }) => {
   const name = form.get('name');
   const email = form.get('email');
   const password = form.get('password');
-
-  console.log('username', name);
-  console.log('email', email);
-  console.log('password', password);
 
   let errors: AuthCreds & { service: string[] } = {
     email: undefined,
@@ -80,19 +75,15 @@ export let action: ActionFunction = async ({ request }) => {
     .single();
 
   if (!role || errorFindingRole) {
-    console.log('deu merda 2');
     return;
   }
 
-  const { data: teste, error: errorTeste } = await supabase
+  const { error: errorInsertingUser } = await supabase
     .from('user')
     .insert({ id: user!.id, role_id: role.id, name, email })
     .single();
 
-  if (!teste || errorTeste) {
-    console.log('PARA DE DAR MERDA PELO AMOR DE DEUS');
-    console.log('teste', teste);
-    console.log('errorTeste', errorTeste);
+  if (errorInsertingUser) {
     return;
   }
 
@@ -102,9 +93,6 @@ export let action: ActionFunction = async ({ request }) => {
     .match({ email });
 
   if (!invitedUser?.length || errorFindingInvitedUser) {
-    console.log('deu merda 3');
-    console.log('invitedUser', invitedUser);
-    console.log('errorFindingInvitedUser', errorFindingInvitedUser);
     return;
   }
 
