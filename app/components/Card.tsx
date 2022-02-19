@@ -15,7 +15,7 @@ export const Card: FC<CardProps> = ({
   buttonLocation,
 }) => {
   return (
-    <div className="card shadow-2xl lg:card-side bg-primary text-primary-content">
+    <div className="card shadow-2xl lg:card-side bg-primary text-primary-content my-6">
       <div className="card-body w-full">
         <h2 className="card-title">{title}</h2>
         <p>{subtitle}</p>
