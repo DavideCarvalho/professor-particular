@@ -4,7 +4,7 @@ import type { User } from '@supabase/supabase-js';
 import AppHeader from './AppHeader';
 
 type AppLayoutProps = {
-  user?: User;
+  user?: any;
 };
 
 export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
@@ -29,6 +29,9 @@ export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
               <Link to="/portal-do-usuario">Portal de pagamento</Link>
             </li>
           )}
+          <li>
+            <Link to="/planos">Planos</Link>
+          </li>
           <li>
             <Form method="post" action="/signout">
               <button
