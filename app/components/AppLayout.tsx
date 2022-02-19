@@ -24,6 +24,11 @@ export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
           <li>
             <Link to="/salas">Salas</Link>
           </li>
+          {user?.stripe_id && (
+            <li>
+              <Link to="/portal-do-usuario">Portal de pagamento</Link>
+            </li>
+          )}
           <li>
             <Form method="post" action="/signout">
               <button
