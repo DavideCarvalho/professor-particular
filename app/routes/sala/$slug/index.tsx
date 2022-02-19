@@ -68,7 +68,7 @@ const AulaPage = () => {
       <div className="divider" />
       {user.role.name === 'PROFESSOR' && (
         <div className="flex justify-end">
-          <Link to={`/aula/${classroom.slug}/nova-aula`}>
+          <Link to={`/sala/${classroom.slug}/nova-aula`}>
             <button className="btn">+ aula</button>
           </Link>
         </div>
