@@ -30,7 +30,7 @@ export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
             </li>
           )}
           <li>
-            <Link to="/planos">Planos</Link>
+            <Link to="/#preco">Planos</Link>
           </li>
           <li>
             <Form method="post" action="/signout">
