@@ -11,6 +11,8 @@ import { AppLayout } from '~/components/AppLayout';
 import { getUserByRequestToken, isAuthenticated } from '~/lib/auth';
 import { supabase } from '~/lib/supabase/supabase.server';
 import { sendInviteEmailToStudent } from '~/lib/nodemailer/nodemailer.server';
+import { Stripe } from 'stripe';
+import { stripeClient } from '~/lib/stripe/stripe.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // checar se o cara autenticado é um professor
@@ -32,6 +34,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return { user: professorUser };
 };
 
+function isPaying(userPlanId: string): boolean {
+  return (
+    !userPlanId ||
+    userPlanId === 'price_1KTD3ZIgRgyZD761SGBTV0Xi' ||
+    userPlanId === 'price_1KTD3wIgRgyZD761Ky8hFRt2'
+  );
+}
+
 export const action: ActionFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
@@ -42,7 +52,35 @@ export const action: ActionFunction = async ({ request, params }) => {
     .match({ id: user.id, 'role.name': 'PROFESSOR' })
     .single();
 
-  console.log('error', error);
+  let userSubscription: Stripe.Subscription | undefined;
+  let userPlan: any;
+
+  if (professorUser?.stripe_id) {
+    const stripeUser = (await stripeClient.customers.retrieve(
+      professorUser.stripe_id,
+      { expand: ['subscriptions'] }
+    )) as Stripe.Customer;
+
+    userSubscription = stripeUser?.subscriptions?.data?.[0];
+    userPlan = (userSubscription as any).plan;
+  }
+
+  if (!isPaying(userPlan)) {
+    const { data: classrooms, error } = await supabase
+      .from('classroom')
+      .select(`*`)
+      .match({ professor_id: professorUser.id });
+
+    if (!classrooms || error) {
+      throw new Error('Internal Server Error');
+    }
+
+    if (classrooms?.length >= 2) {
+      throw new Error(
+        'Professor cannot create more classrooms, since he is on free tier'
+      );
+    }
+  }
 
   const body = await request.formData();
 
