@@ -60,7 +60,7 @@ export default function ProfessorStudentsPage() {
   return (
     <AppLayout user={user}>
       <div className="flex flex-col justify-center items-center relative">
-        <h1 className="text-5xl">Salas</h1>
+        <h1 className="text-5xl">Suas salas</h1>
         <div className="flex justify-end w-full">
           <Link to="nova-sala" className="btn">+ sala</Link>
         </div>
