@@ -60,6 +60,7 @@ const postLoader: LoaderFunction = async ({ request }) => {
   let customerEmail;
 
   switch (eventType) {
+    case 'customer.subscription.created':
     case 'checkout.session.completed':
     case 'invoice.paid':
       const checkoutSessionCompletedStripeWebhook: CheckoutSessionCompletedDataStripeWebhook =
@@ -93,6 +94,11 @@ const postLoader: LoaderFunction = async ({ request }) => {
       // customer portal to update their payment information.
       console.log('Vish, parou de pagar, quebra o cara', data);
       break;
+    case 'customer.subscription.deleted':
+      console.log('vish, o cara parou de pagar');
+      break;
+    case 'customer.subscription.updated':
+      console.log('mudou o billing');
     default:
     // Unhandled event type
   }
