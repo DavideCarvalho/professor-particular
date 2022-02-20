@@ -16,8 +16,8 @@ export interface ClassroomEntity {
 
 export const CLASSROOM_ENTITY_SELECT = `
   *,
-  student: classroom_student_id_fkey(${USER_ENTITY_SELECT}),
-  professor: classroom_professor_id_fkey(${USER_ENTITY_SELECT})
+  student: student_id(${USER_ENTITY_SELECT}),
+  professor: professor_id(${USER_ENTITY_SELECT})
 `;
 
 export async function getProfessorClassrooms(

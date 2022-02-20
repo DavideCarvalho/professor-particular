@@ -1,5 +1,5 @@
 import { supabase } from '~/lib/supabase/supabase.server';
-import {ROLE_ENTITY_SELECT, RoleEntity} from '~/back/service/role.service';
+import { ROLE_ENTITY_SELECT, RoleEntity } from '~/back/service/role.service';
 
 export interface UserEntity {
   id: string;
@@ -14,7 +14,7 @@ export interface UserEntity {
 
 export const USER_ENTITY_SELECT = `
   *,
-  role(${ROLE_ENTITY_SELECT}))
+  role(${ROLE_ENTITY_SELECT})
 `;
 
 export async function getUserById(id: string): Promise<UserEntity> {

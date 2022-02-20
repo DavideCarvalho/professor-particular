@@ -1,9 +1,10 @@
 import { supabase } from '~/lib/supabase/supabase.server';
-import { ROLE_ENTITY_SELECT } from '~/back/service/role.service';
 import {
   CLASSROOM_ENTITY_SELECT,
   ClassroomEntity,
 } from '~/back/service/classroom.service';
+import slug from 'slug';
+import { USER_ENTITY_SELECT } from '~/back/service/user.service';
 
 export interface LessonEntity {
   name: string;
@@ -19,7 +20,7 @@ export interface LessonEntity {
 
 export const LESSON_ENTITY_SELECT = `
   *,
-  classroom: lesson_classrom_id_fkey(${CLASSROOM_ENTITY_SELECT})),
+  classroom: classroom_id(${CLASSROOM_ENTITY_SELECT})
 `;
 
 export async function createLesson(
@@ -30,6 +31,7 @@ export async function createLesson(
   const { data, error } = await supabase
     .from<LessonEntity>('lesson')
     .insert({
+      slug: slug(name),
       name: name,
       objectives: objectives,
       classroom_id: classroomId,
