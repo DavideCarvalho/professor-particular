@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     student_id: data.student_id,
   });
 
-  return redirect(`/aula/${params.slug}`);
+  return redirect(`/sala/${params.slug}`);
 };
 
 export default function ProfessorNewLessonPage() {
