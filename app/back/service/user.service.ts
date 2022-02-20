@@ -29,7 +29,7 @@ export async function getUserById(id: string): Promise<UserEntity> {
     if (error) throw new Error(error.message);
     throw new Error('Unexpected Error');
   }
-  return data as UserEntity;
+  return data;
 }
 
 export async function getProfessorById(

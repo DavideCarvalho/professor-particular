@@ -39,14 +39,16 @@ export async function getLessonByLessonSlugAndClassroomId(
   return data;
 }
 
-export async function findLessonBySlugAndClassroomId(
+export async function findLessonBySlugAndClassroomIdAndLikeSlug(
   name: string,
   classroomId: string
 ): Promise<LessonEntity[]> {
   const { data, error } = await supabase
     .from<LessonEntity>('lesson')
-    .select(LESSON_ENTITY_SELECT, { count: 'exact' })
-    .match({ slug: slug(name), classroom_id: classroomId });
+    .select(LESSON_ENTITY_SELECT)
+    .eq('slug', slug(name))
+    .eq('classroom_id', classroomId)
+    .like('slug', `%${slug(name)}-%`);
 
   if (!data) {
     throw new Error(error?.message ?? 'Unexpected Error');
@@ -60,7 +62,10 @@ export async function createLesson(
   objectives: string,
   classroomId: string
 ): Promise<LessonEntity> {
-  const lessonsWithSameSlug = await findLessonBySlugAndClassroomId(name);
+  const lessonsWithSameSlug = await findLessonBySlugAndClassroomIdAndLikeSlug(
+    name,
+    classroomId
+  );
   let slugifiedName = name;
   if (lessonsWithSameSlug.length > 0) {
     slugifiedName = `${name}-${lessonsWithSameSlug.length}`;
