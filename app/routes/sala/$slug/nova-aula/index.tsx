@@ -8,9 +8,8 @@ import {
 import { User } from '@supabase/supabase-js';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
-import { supabase } from '~/lib/supabase/supabase.server';
 import { getClassroomBySlugAndProfessorId } from '~/back/service/classroom.service';
-import { getProfessorById, getUserById } from '~/back/service/user.service';
+import { getProfessorById } from '~/back/service/user.service';
 import { createLesson } from '~/back/service/lesson.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
