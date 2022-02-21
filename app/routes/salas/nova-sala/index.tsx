@@ -20,7 +20,7 @@ import {
 } from '~/back/service/user.service';
 import {
   createClassroom,
-  getProfessorClassrooms,
+  getClassroomsByProfessorId,
 } from '~/back/service/classroom.service';
 import { createInviteStudent } from '~/back/service/invited-student.service';
 
@@ -74,7 +74,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   if (!isPaying(userPlan)) {
-    const classrooms = await getProfessorClassrooms(professorUser.id);
+    const classrooms = await getClassroomsByProfessorId(professorUser.id);
 
     if (classrooms?.length >= 2) {
       throw new Error(

@@ -10,7 +10,7 @@ import { getUserById, UserEntity } from '~/back/service/user.service';
 import { getRoleById } from '~/back/service/role.service';
 import {
   ClassroomEntity,
-  getProfessorClassrooms,
+  getClassroomsByProfessorId,
   getStudentClassrooms,
 } from '~/back/service/classroom.service';
 
@@ -46,7 +46,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const classrooms =
     userRole.name === 'PROFESSOR'
-      ? await getProfessorClassrooms(foundUser.id)
+      ? await getClassroomsByProfessorId(foundUser.id)
       : await getStudentClassrooms(foundUser.id);
 
   return {

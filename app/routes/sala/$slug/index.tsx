@@ -1,5 +1,10 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { AiOutlineFilePdf, AiOutlineFileExcel } from 'react-icons/ai';
+import {
+  AiFillDelete,
+  AiOutlineFileExcel,
+  AiOutlineFilePdf,
+  AiOutlineUpload,
+} from 'react-icons/ai';
 import { IconType } from 'react-icons';
 import { SiGooglemeet, SiMicrosoftteams } from 'react-icons/si';
 import { FaDiscord } from 'react-icons/fa';
@@ -7,64 +12,79 @@ import { FiVideo } from 'react-icons/fi';
 import { Link, LoaderFunction, redirect, useLoaderData } from 'remix';
 import { AppLayout } from '~/components/AppLayout';
 import { getUserByRequestToken, isAuthenticated } from '~/lib/auth';
-import { supabase } from '~/lib/supabase/supabase.server';
 import { getSupabaseClient } from '~/lib/supabase';
 import { Modal } from '~/components/Modal';
 import { SimpleModal } from '~/components/SimpleModal';
-import { AiOutlineUpload, AiFillDelete } from 'react-icons/ai';
 import { TiCancel } from 'react-icons/ti';
 import { MdOpenInNew } from 'react-icons/md';
 import { ModalChangeLessonLink } from '~/components/modal-change-lesson-link';
+import { getUserById, UserEntity } from '~/back/service/user.service';
+import {
+  ClassroomEntity,
+  getClassroomBySlugAndProfessorId,
+  getClassroomBySlugAndStudentId,
+} from '~/back/service/classroom.service';
+import { getRoleById } from '~/back/service/role.service';
+import {
+  findLessonsByClassroomIdOrderedByCreatedAt,
+  LessonEntity,
+} from '~/back/service/lesson.service';
+import {
+  DocumentsEntity,
+  findDocumentsByLessonId,
+} from '~/back/service/documents.service';
+
+interface LessonWithDocuments extends LessonEntity {
+  documents: DocumentsEntity[];
+}
+
+interface AulaPageLoaderData {
+  classroom: ClassroomEntity;
+  lessons: LessonWithDocuments[];
+  user: UserEntity;
+}
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
-  const { data: foundUser, error: foundUserError } = await supabase
-    .from('user')
-    .select(
-      `
-      id,
-      role(name)
-    `
-    )
-    .match({ id: user.id })
-    .single();
-  if (!foundUser || foundUserError) {
+  let foundUser: UserEntity;
+  try {
+    foundUser = await getUserById(user.id);
+  } catch (e) {
     return redirect('/login');
   }
-  const { role } = foundUser;
-  const { data: classroom, error } = await supabase
-    .from('classroom')
-    .select(
-      `
-      id,
-      className: name,
-      slug
-    `
-    )
-    .eq(role.name === 'PROFESSOR' ? 'professor_id' : 'student_id', user.id)
-    .eq('slug', params.slug)
-    .single();
 
-  const { data: lessons, error: lessonsError } = await supabase
-    .from('lesson')
-    .select(
-      `
-    *,
-    documents(path, name)
-    `
-    )
-    .match({ classroom_id: classroom.id })
-    .order('created_at', { ascending: false });
+  const userRole = await getRoleById(foundUser.role_id);
 
-  return { classroom, lessons, user: foundUser };
+  const classroom =
+    userRole.name === 'PROFESSOR'
+      ? await getClassroomBySlugAndProfessorId(
+          params.slug as string,
+          foundUser.id
+        )
+      : await getClassroomBySlugAndStudentId(
+          params.slug as string,
+          foundUser.id
+        );
+
+  const lessons = await findLessonsByClassroomIdOrderedByCreatedAt(
+    classroom.id
+  );
+
+  const lessonsWithDocuments: LessonWithDocuments[] = await Promise.all(
+    lessons.map<Promise<LessonWithDocuments>>(async (lesson) => {
+      return { ...lesson, documents: await findDocumentsByLessonId(lesson.id) };
+    })
+  );
+
+  return { classroom, lessons: lessonsWithDocuments, user: foundUser };
 };
 
 const AulaPage = () => {
-  const { classroom, lessons, user } = useLoaderData();
+  const { classroom, lessons, user } = useLoaderData<AulaPageLoaderData>();
   return (
     <AppLayout>
-      <h1 className="text-2xl">{classroom.className}</h1>
+      <h1 className="text-2xl">{classroom.name}</h1>
       <div className="divider" />
       {user.role.name === 'PROFESSOR' && (
         <div className="flex justify-end">

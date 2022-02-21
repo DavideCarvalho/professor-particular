@@ -6,6 +6,7 @@ import {
 import slug from 'slug';
 
 export interface LessonEntity {
+  id: string;
   name: string;
   slug: string;
   objectives: string;
@@ -17,6 +18,7 @@ export interface LessonEntity {
   student_feedback?: string;
 }
 
+// TODO: Colocar relacionamento com Documents
 export const LESSON_ENTITY_SELECT = `
   *,
   classroom: classroom_id(${CLASSROOM_ENTITY_SELECT})
@@ -39,7 +41,23 @@ export async function getLessonByLessonSlugAndClassroomId(
   return data;
 }
 
-export async function findLessonBySlugAndClassroomIdAndLikeSlug(
+export async function findLessonsByClassroomIdOrderedByCreatedAt(
+  classroomId: string
+): Promise<LessonEntity[]> {
+  const { data, error } = await supabase
+    .from<LessonEntity>('lesson')
+    .select(LESSON_ENTITY_SELECT)
+    .eq('classroom_id', classroomId)
+    .order('created_at', { ascending: false });
+
+  if (!data) {
+    throw new Error(error?.message ?? 'Unexpected Error');
+  }
+
+  return data;
+}
+
+export async function findLessonsBySlugAndClassroomIdAndLikeSlug(
   name: string,
   classroomId: string
 ): Promise<LessonEntity[]> {
@@ -62,7 +80,7 @@ export async function createLesson(
   objectives: string,
   classroomId: string
 ): Promise<LessonEntity> {
-  const lessonsWithSameSlug = await findLessonBySlugAndClassroomIdAndLikeSlug(
+  const lessonsWithSameSlug = await findLessonsBySlugAndClassroomIdAndLikeSlug(
     name,
     classroomId
   );

@@ -9,7 +9,7 @@ export interface ClassroomEntity {
   professor: UserEntity;
   name: string;
   slug: string;
-  createdAt: string;
+  created_at: string;
   student_id?: string;
   student?: UserEntity;
 }
@@ -20,7 +20,7 @@ export const CLASSROOM_ENTITY_SELECT = `
   professor: professor_id(${USER_ENTITY_SELECT})
 `;
 
-export async function getProfessorClassrooms(
+export async function getClassroomsByProfessorId(
   professorId: string
 ): Promise<ClassroomEntity[]> {
   const { data, error } = await supabase
@@ -58,6 +58,23 @@ export async function getClassroomBySlugAndProfessorId(
     .from<ClassroomEntity>('classroom')
     .select(CLASSROOM_ENTITY_SELECT)
     .match({ professor_id: professorId, slug })
+    .single();
+
+  if (!data) {
+    throw new Error(error?.message ?? 'Classroom not found');
+  }
+
+  return data;
+}
+
+export async function getClassroomBySlugAndStudentId(
+  slug: string,
+  studentId: string
+): Promise<ClassroomEntity> {
+  const { data, error } = await supabase
+    .from<ClassroomEntity>('classroom')
+    .select(CLASSROOM_ENTITY_SELECT)
+    .match({ student_id: studentId, slug })
     .single();
 
   if (!data) {
