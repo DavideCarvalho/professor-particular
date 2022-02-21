@@ -10,37 +10,22 @@ import { AppLayout } from '~/components/AppLayout';
 import { getUserByRequestToken, isAuthenticated } from '~/lib/auth';
 import { supabase } from '~/lib/supabase/supabase.server';
 import { useState } from 'react';
+import { getLessonByLessonSlugAndClassroomId } from '~/back/service/lesson.service';
+import { getProfessorById } from '~/back/service/user.service';
+import { getClassroomBySlugAndProfessorId } from '~/back/service/classroom.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
-  const { data, error } = await supabase
-    .from('classroom')
-    .select('*')
-    .match({ slug: params.slug })
-    .single();
-
-  if (error) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
-
-  const { data: lesson, error: errorSearchingLesson } = await supabase
-    .from('lesson')
-    .select('*')
-    .match({
-      slug: params.lessonSlug,
-      professor_id: data.professor_id,
-      student_id: data.student_id,
-    })
-    .single();
-
-  if (errorSearchingLesson) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
+  const professor = await getProfessorById(user.id);
+  const classroom = await getClassroomBySlugAndProfessorId(
+    params.slug as string,
+    professor.id
+  );
+  const lesson = await getLessonByLessonSlugAndClassroomId(
+    params.lessonSlug as string,
+    classroom.id
+  );
 
   return {
     user,
@@ -49,29 +34,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { data, error } = await supabase
-    .from('classroom')
-    .select('*')
-    .match({ slug: params.slug })
-    .single();
-
-  if (error) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
-
-  const { error: errorSearchingLesson } = await supabase
-    .from('lesson')
-    .select('*')
-    .match({ slug: params.lessonSlug })
-    .single();
-
-  if (errorSearchingLesson) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
+  if (!(await isAuthenticated(request))) return redirect('/login');
+  const { user } = await getUserByRequestToken(request);
+  const professor = await getProfessorById(user.id);
+  const classroom = await getClassroomBySlugAndProfessorId(
+    params.slug as string,
+    professor.id
+  );
+  const lesson = await getLessonByLessonSlugAndClassroomId(
+    params.lessonSlug as string,
+    classroom.id
+  );
 
   const body = await request.formData();
 
@@ -83,9 +56,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     })
     .match({
       slug: params.lessonSlug,
-      professor_id: data.professor_id,
-      student_id: data.student_id,
+      classroom_id: lesson.classroom_id,
     });
+
+  console.log('errorUpdatingLesson', errorUpdatingLesson);
 
   return redirect(`/sala/${params.slug}`);
 };

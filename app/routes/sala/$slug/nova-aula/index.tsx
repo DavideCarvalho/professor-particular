@@ -8,48 +8,39 @@ import {
 import { User } from '@supabase/supabase-js';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
-import { ChangeEventHandler, FC } from 'react';
-import { supabase } from '~/lib/supabase/supabase.server';
+import { getClassroomBySlugAndProfessorId } from '~/back/service/classroom.service';
+import { getProfessorById } from '~/back/service/user.service';
+import { createLesson } from '~/back/service/lesson.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
-  const { data, error } = await supabase
-    .from('classroom')
-    .select()
-    .eq('slug', params.slug)
-    .single();
-  if (!data || error) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
+  const foundProfessor = await getProfessorById(user.id);
+  await getClassroomBySlugAndProfessorId(
+    params.slug as string,
+    foundProfessor.id
+  );
   return {
     user,
   };
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { data, error } = await supabase
-    .from('classroom')
-    .select('*')
-    .eq('slug', params.slug)
-    .single();
-
-  if (!data || error) {
-    throw new Response('Not Found', {
-      status: 404,
-    });
-  }
+  if (!(await isAuthenticated(request))) return redirect('/login');
+  const { user } = await getUserByRequestToken(request);
+  const foundProfessor = await getProfessorById(user.id);
+  const classroom = await getClassroomBySlugAndProfessorId(
+    params.slug as string,
+    foundProfessor.id
+  );
 
   const body = await request.formData();
 
-  const { data: data2, error: error2 } = await supabase.from('lesson').insert({
-    name: body.get('name'),
-    objectives: body.get('objectives'),
-    professor_id: data.professor_id,
-    student_id: data.student_id,
-  });
+  await createLesson(
+    body.get('name') as string,
+    body.get('objectives') as string,
+    classroom.id
+  );
 
   return redirect(`/sala/${params.slug}`);
 };

@@ -13,6 +13,16 @@ import { supabase } from '~/lib/supabase/supabase.server';
 import { sendInviteEmailToStudent } from '~/lib/nodemailer/nodemailer.server';
 import { Stripe } from 'stripe';
 import { stripeClient } from '~/lib/stripe/stripe.server';
+import {
+  getStudentByEmail,
+  getUserById,
+  UserEntity,
+} from '~/back/service/user.service';
+import {
+  createClassroom,
+  getClassroomsByProfessorId,
+} from '~/back/service/classroom.service';
+import { createInviteStudent } from '~/back/service/invited-student.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // checar se o cara autenticado é um professor
@@ -21,13 +31,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
 
-  const { data: professorUser, error } = await supabase
-    .from('user')
-    .select('*, role!inner(*)')
-    .match({ id: user.id, 'role.name': 'PROFESSOR' })
-    .single();
-
-  if (!professorUser || error) {
+  let professorUser: UserEntity;
+  try {
+    professorUser = await getUserById(user.id);
+  } catch (e) {
     return redirect('/salas');
   }
 
@@ -42,15 +49,16 @@ function isPaying(userPlanId: string): boolean {
   );
 }
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request }) => {
   if (!(await isAuthenticated(request))) return redirect('/login');
   const { user } = await getUserByRequestToken(request);
 
-  const { data: professorUser, error } = await supabase
-    .from('user')
-    .select('*, role!inner(*)')
-    .match({ id: user.id, 'role.name': 'PROFESSOR' })
-    .single();
+  let professorUser: UserEntity;
+  try {
+    professorUser = await getUserById(user.id);
+  } catch (e) {
+    return redirect('/salas');
+  }
 
   let userSubscription: Stripe.Subscription | undefined;
   let userPlan: any;
@@ -66,70 +74,48 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   if (!isPaying(userPlan)) {
-    const { data: classrooms, error } = await supabase
-      .from('classroom')
-      .select(`*`)
-      .match({ professor_id: professorUser.id });
-
-    if (!classrooms || error) {
-      throw new Error('Internal Server Error');
-    }
+    const classrooms = await getClassroomsByProfessorId(professorUser.id);
 
     if (classrooms?.length >= 2) {
       throw new Error(
-        'Professor cannot create more classrooms, since he is on free tier'
+        `Professor cannot create more classrooms, since he's on free tier`
       );
     }
   }
 
   const body = await request.formData();
 
-  const { data: foundStudent, error: findUserByEmailError } = await supabase
-    .from('user')
-    .select('*')
-    .match({ email: body.get('student_email') })
-    .single();
-
-  if (!foundStudent || findUserByEmailError) {
-    // enviar e-mail pro usuário antes de inserir no banco
-
+  let foundStudent: UserEntity | undefined;
+  try {
+    foundStudent = await getStudentByEmail(body.get('student_email') as string);
+  } catch (e: any) {
+    if (e?.message !== 'User not found') {
+      return redirect('/salas');
+    }
     await sendInviteEmailToStudent({
       studentEmail: body.get('student_email') as string,
       classroomName: body.get('classroom_name') as string,
       professorName: professorUser.name,
     });
 
-    const { data: classroom, error: errorInsertingClassroom } = await supabase
-      .from('classroom')
-      .insert({
-        professor_id: professorUser.id,
-        name: body.get('classroom_name') as string,
-        slug: slug(body.get('classroom_name') as string),
-      })
-      .single();
+    const createdClassroom = await createClassroom(
+      professorUser.id,
+      body.get('classroom_name') as string
+    );
 
-    if (!classroom || errorInsertingClassroom) {
-      return;
-    }
-
-    const { data: invitedStudent, error: errorAddingInvitedStudent } =
-      await supabase.from('invited_student').insert({
-        email: body.get('student_email'),
-        classroom_id: classroom.id,
-      });
+    await createInviteStudent(
+      body.get('student_email') as string,
+      createdClassroom.id
+    );
 
     return redirect('/salas');
   }
 
-  const { data: classroom, error: errorInsertingClassroom } = await supabase
-    .from('classroom')
-    .insert({
-      professor_id: professorUser.id,
-      student_id: foundStudent.id,
-      name: body.get('classroom_name') as string,
-      slug: slug(body.get('classroom_name') as string),
-    })
-    .single();
+  await createClassroom(
+    professorUser.id,
+    body.get('classroom_name') as string,
+    foundStudent.id
+  );
 
   return redirect('/salas');
 };
