@@ -4,8 +4,20 @@ import {
   MdOutlineInfo,
   MdOutlineUploadFile,
 } from 'react-icons/md';
-import { Link } from 'remix';
+import {Link, MetaFunction} from 'remix';
 import { Form } from '@remix-run/react';
+
+export let meta: MetaFunction = () => {
+  return {
+    title: 'Pró-Fessor',
+    description: 'Sistema para aulas particulares',
+    'og:site_name': 'Pró-Fessor',
+    'og:title': 'Pró-Fessor',
+    'og:description': 'Sistema para aulas particulares',
+    'og:type': 'website',
+    'og:image': 'https://professor-particular.vercel.app/'
+  };
+};
 
 export default function Index() {
   const [showMenu, setShowMenu] = useState(false);
