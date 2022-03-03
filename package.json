@@ -45,7 +45,7 @@
     "@tailwindcss/typography": "0.5.2",
     "@types/qs": "6.9.7",
     "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11",
+    "@types/react-dom": "17.0.13",
     "@types/slug": "5.0.3",
     "autoprefixer": "10.4.2",
     "concurrently": "7.0.0",
