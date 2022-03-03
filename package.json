@@ -21,7 +21,7 @@
     "@remix-run/serve": "1.2.3",
     "@remix-run/vercel": "1.2.3",
     "@stripe/react-stripe-js": "1.7.0",
-    "@stripe/stripe-js": "1.23.0",
+    "@stripe/stripe-js": "1.24.0",
     "@supabase/supabase-js": "1.30.7",
     "@types/nodemailer": "6.4.4",
     "dotenv": "16.0.0",
