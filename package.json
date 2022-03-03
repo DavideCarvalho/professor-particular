@@ -39,7 +39,7 @@
     "stripe": "8.207.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "1.2.1",
+    "@remix-run/dev": "1.2.3",
     "@tailwindcss/aspect-ratio": "0.4.0",
     "@tailwindcss/line-clamp": "0.3.1",
     "@tailwindcss/typography": "0.5.2",
