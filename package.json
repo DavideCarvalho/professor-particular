@@ -52,7 +52,7 @@
     "cross-env": "7.0.3",
     "daisyui": "2.1.0",
     "eslint": "8.10.0",
-    "eslint-config-prettier": "8.4.0",
+    "eslint-config-prettier": "8.5.0",
     "eslint-config-remix": "0.0.2",
     "husky": "7.0.4",
     "lint-staged": "12.3.4",
