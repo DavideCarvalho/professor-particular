@@ -60,10 +60,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
-  return redirect('/login');
+  return json<ChangePasswordActionData>(
+    { errors: {}, result: 'Senha alterada com sucesso!' },
+    { status: 200 }
+  );
 };
 
 export default function LoginPage() {
   const actionData = useActionData<ChangePasswordActionData>();
-  return <ChangePasswordForm errors={actionData?.errors} result={actionData?.result} />;
+  return (
+    <ChangePasswordForm
+      errors={actionData?.errors}
+      result={actionData?.result}
+    />
+  );
 }

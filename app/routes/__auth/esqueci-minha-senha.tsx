@@ -1,8 +1,13 @@
 import type { ActionFunction } from 'remix';
 import { useActionData, MetaFunction, redirect, json } from 'remix';
-import { AuthCreds } from '../../components/AuthForm';
+import { AuthCreds } from '~/components/AuthForm';
 import { supabase } from '~/lib/supabase/supabase.server';
 import ForgotPasswordForm from '~/components/forgot-password-form';
+
+interface ForgotPasswordActionData {
+  errors?: AuthCreds & { service?: Array<string> };
+  result?: string;
+}
 
 export let meta: MetaFunction = () => {
   return {
@@ -23,7 +28,7 @@ export let action: ActionFunction = async ({ request, params }) => {
 
   try {
     const { error } = await supabase.auth.api.resetPasswordForEmail(
-      email?.toString()!,
+      email?.toString()!
     );
     if (error) {
       errors.service = [error.message];
@@ -35,13 +40,24 @@ export let action: ActionFunction = async ({ request, params }) => {
   }
 
   if (Object.keys(errors).length) {
-    return json(errors, { status: 422 });
+    return json({ errors, result: undefined }, { status: 422 });
   }
 
-  return redirect('/login');
+  return json(
+    {
+      errors: {},
+      result: 'Enviamos um link para seu e-mail. Clique e altere sua senha!',
+    },
+    { status: 200 }
+  );
 };
 
 export default function LoginPage() {
-  const errors = useActionData<AuthCreds>();
-  return <ForgotPasswordForm errors={errors} />;
+  const actionData = useActionData<ForgotPasswordActionData>();
+  return (
+    <ForgotPasswordForm
+      errors={actionData?.errors}
+      result={actionData?.result}
+    />
+  );
 }

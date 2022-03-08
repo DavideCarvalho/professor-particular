@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
-import { Form, useSearchParams, useTransition } from 'remix';
+import { Form, Link, useSearchParams, useTransition } from 'remix';
 
 export type AuthCreds = {
   email?: string;
@@ -113,12 +113,19 @@ function AuthForm({
           </button>
 
           <div className="text-right">
+            <small className="block">Esqueceu sua senha?</small>
+            <Link to="/esqueci-minha-senha">
+              Clique aqui
+            </Link>
+          </div>
+
+          <div className="text-right">
             <small className="block">
               {isSignInProp ? `Não tem uma conta?` : `Já tem conta?`}
             </small>
-            <a href={authUrl} title="Sign Up">
+            <Link to={authUrl}>
               {isSignInProp ? `Cadastre-se!` : `Entre aqui!`}
-            </a>
+            </Link>
           </div>
         </div>
       </fieldset>

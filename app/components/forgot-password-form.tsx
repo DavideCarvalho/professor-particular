@@ -7,12 +7,13 @@ export type AuthCreds = {
 };
 
 type AuthFormProps = {
-  isSignIn?: boolean;
   errors?: AuthCreds & { service?: Array<string> };
+  result?: string;
 };
 
 function ForgotPasswordForm({
   errors = {},
+  result
 }: PropsWithChildren<AuthFormProps>): ReactElement {
   let transition = useTransition();
   return (
@@ -44,6 +45,7 @@ function ForgotPasswordForm({
             placeholder="seu@email.com"
           />
           <div className="h-3 text-xs">{errors?.email && errors.email}</div>
+          <div className="h-3 text-xs">{result}</div>
         </div>
         <div className="w-full mb-6 flex justify-between items-center">
           <button
