@@ -21,11 +21,11 @@ export let action: ActionFunction = async ({ request, params }) => {
   let errors: AuthCreds & { service?: Array<string> } = {};
 
   if (typeof email !== 'string' || !email.match(/^\S+@\S+$/)) {
-    errors.email = 'fill-in a valid email address!';
+    errors.email = 'Coloque um e-mail valido';
   }
 
   if (typeof password !== 'string' || password.length < 6) {
-    errors.password = 'password must be at-least 6 chars!';
+    errors.password = 'senha deve conter pelo menos 6 caracteres';
   }
 
   let session: Session | null = null;
@@ -48,8 +48,6 @@ export let action: ActionFunction = async ({ request, params }) => {
   if (Object.keys(errors).length) {
     return json(errors, { status: 422 });
   }
-
-  console.log('redirect', redirectTo.replace('{USER_ID}', session!.user!.id));
 
   if (session) {
     return redirect(redirectTo.replace('{USER_ID}', session!.user!.id), {
