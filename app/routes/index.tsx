@@ -4,7 +4,7 @@ import {
   MdOutlineInfo,
   MdOutlineUploadFile,
 } from 'react-icons/md';
-import {Link, MetaFunction} from 'remix';
+import {Link, LoaderFunction, MetaFunction, redirect} from 'remix';
 import { Form } from '@remix-run/react';
 
 export let meta: MetaFunction = () => {
@@ -18,6 +18,14 @@ export let meta: MetaFunction = () => {
     'og:image': 'https://professor-particular.vercel.app/'
   };
 };
+
+export const loader: LoaderFunction = ({ request }) => {
+  const url = new URL(request.url);
+  if (url.searchParams.get('type') === 'recovery') {
+    return redirect(`/trocar-senha${url.search}`);
+  }
+  return null;
+}
 
 export default function Index() {
   const [showMenu, setShowMenu] = useState(false);

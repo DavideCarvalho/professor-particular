@@ -1,21 +1,21 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { Form, useLoaderData, useTransition } from 'remix';
+import { Form, useTransition } from 'remix';
 
 export type AuthCreds = {
   email?: string;
   password?: string;
 };
 
-type AuthFormProps = {
+type ChangePasswordFormProps = {
   errors?: AuthCreds & { service?: Array<string> };
+  result?: string;
 };
 
-function AuthForm({
+function ChangePasswordForm({
   errors = {},
-}: PropsWithChildren<AuthFormProps>): ReactElement {
-  const { studentEmail } = useLoaderData();
+  result,
+}: PropsWithChildren<ChangePasswordFormProps>): ReactElement {
   let transition = useTransition();
-
   return (
     <Form
       className="w-full bg-gray-50 px-10 py-8 rounded-md shadow-md"
@@ -23,7 +23,7 @@ function AuthForm({
     >
       <fieldset>
         <legend className="text-purple-600 pb-4 text-4xl border-b mb-4">
-          Cadastrar
+          Trocar senha
         </legend>
         <div className="h-3 text-xs">
           {errors?.service && errors.service.map((error) => error)}
@@ -34,49 +34,18 @@ function AuthForm({
             className="block uppercase font-semibold text-gray-600 text-base"
             htmlFor="email"
           >
-            Nome
-          </label>
-          <input
-            id="name"
-            name="name"
-            className="w-full font-normal border py-2 px-4 text-gray-700 hover:bg-gray-50 focus:border-indigo-500 rounded-md focus:outline-none"
-            type="text"
-          />
-        </div>
-        <div className="w-full mb-6">
-          <label
-            className="block uppercase font-semibold text-gray-600 text-base"
-            htmlFor="email"
-          >
-            Email
+            Senha
           </label>
           <input
             id="email"
             className="w-full font-normal border py-2 px-4 text-gray-700 hover:bg-gray-50 focus:border-indigo-500 rounded-md focus:outline-none"
-            name="email"
-            type="email"
-            value={studentEmail}
-            readOnly={true}
-          />
-        </div>
-        <div className="w-full mb-6">
-          <label
-            className="block uppercase font-semibold text-gray-600 text-base"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            className="w-full font-normal border py-2 px-4 text-gray-700 hover:bg-gray-50 focus:border-indigo-500 rounded-md focus:outline-none"
             name="password"
             type="password"
             required
-            placeholder="************"
+            placeholder="***************"
           />
-          <div className="h-3 text-xs">
-            {errors?.password && errors.password}
-          </div>
+          <div className="h-3 text-xs">{errors?.email && errors.email}</div>
+          <div className="h-3 text-xs">{result}</div>
         </div>
         <div className="w-full mb-6 flex justify-between items-center">
           <button
@@ -86,7 +55,7 @@ function AuthForm({
             }`}
             disabled={transition.state === 'submitting'}
           >
-            Cadastrar!
+            Confirmar
           </button>
         </div>
       </fieldset>
@@ -94,4 +63,4 @@ function AuthForm({
   );
 }
 
-export default AuthForm;
+export default ChangePasswordForm;
