@@ -10,7 +10,7 @@ import { Form } from '@remix-run/react';
 export let meta: MetaFunction = () => {
   return {
     title: 'Pró-Fessor',
-    description: 'Sistema para aulas particulares',
+    description: 'Sistema para gestão de aulas particulares',
     'og:site_name': 'Pró-Fessor',
     'og:title': 'Pró-Fessor',
     'og:description': 'Sistema para aulas particulares',
