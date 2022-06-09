@@ -34,7 +34,7 @@
     "react-hot-toast": "2.2.0",
     "react-icons": "4.3.1",
     "react-use": "17.3.2",
-    "remix": "1.2.3",
+    "remix": "1.5.1",
     "remix-seo": "0.1.0",
     "remix-validated-form": "^4.1.8",
     "slug": "5.3.0",
