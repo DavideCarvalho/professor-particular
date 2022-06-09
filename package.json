@@ -38,7 +38,7 @@
     "remix-seo": "0.1.0",
     "remix-validated-form": "^4.1.8",
     "slug": "5.3.0",
-    "stripe": "8.208.0",
+    "stripe": "8.222.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
