@@ -23,7 +23,7 @@
     "@remix-validated-form/with-yup": "^2.0.1",
     "@stripe/react-stripe-js": "1.8.1",
     "@stripe/stripe-js": "1.31.0",
-    "@supabase/supabase-js": "1.31.1",
+    "@supabase/supabase-js": "1.35.3",
     "@types/nodemailer": "6.4.4",
     "dotenv": "16.0.1",
     "nodemailer": "6.7.2",
