@@ -17,7 +17,7 @@ import {
 interface LoaderData {
   classrooms: ClassroomEntity[];
   user: UserEntity;
-  userPlanId: string;
+  userPlanId?: string;
 }
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -52,7 +52,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   return {
     classrooms,
     user: foundUser,
-    userPlanId: userPlan.id,
+    userPlanId: userPlan?.id,
   };
 };
 
