@@ -87,7 +87,7 @@ function SignUpForm({ errorMessage }: SignUpFormProps): ReactElement {
             }`}
             disabled={transition.state === 'submitting'}
           >
-            Entrar
+            Cadastrar
           </button>
 
           <div className="text-right">
