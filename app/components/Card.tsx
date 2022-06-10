@@ -3,7 +3,7 @@ import { Link } from 'remix';
 
 interface CardProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   buttonLabel: string;
   buttonLocation: string;
 }
