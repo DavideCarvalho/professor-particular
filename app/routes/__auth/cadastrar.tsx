@@ -1,5 +1,5 @@
 import type { ActionFunction } from 'remix';
-import type { Session, User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 import { useActionData, MetaFunction, redirect, json } from 'remix';
 import { supabase } from '~/lib/supabase/supabase.server';
 import {
