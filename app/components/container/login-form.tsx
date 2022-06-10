@@ -52,7 +52,7 @@ function LoginForm({
     >
       <fieldset>
         <legend className="text-purple-600 pb-4 text-4xl border-b mb-4">
-          Olá professor, entre!
+          Olá, entre!
         </legend>
         {errorMessage && (
           <div className="text-red-600">{errorMessage}</div>
