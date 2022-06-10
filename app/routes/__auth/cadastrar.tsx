@@ -8,6 +8,7 @@ import {
 } from '~/components/container/sign-up-form';
 import { validationError } from 'remix-validated-form';
 import { getRoleByName, RoleEntity } from '~/back/service/role.service';
+import { createUser } from '~/back/service/user.service';
 
 export interface SignInPageActionData {
   error?: ErrorMessage;
@@ -54,12 +55,6 @@ export let action: ActionFunction = async ({ request }) => {
     );
   }
 
-  // const { data: role, error: errorFindingRole } = await supabase
-  //   .from('role')
-  //   .select('id')
-  //   .match({ name: 'PROFESSOR' })
-  //   .single();
-
   let role: RoleEntity;
   try {
     role = await getRoleByName('PROFESSOR');
@@ -72,12 +67,10 @@ export let action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { error: errorInsertingUser } = await supabase
-    .from('user')
-    .insert({ id: (signUpData as User).id, role_id: role.id, name, email })
-    .single();
 
-  if (errorInsertingUser) {
+  try {
+    await createUser((signUpData as User).id, role.id, name, email);
+  } catch (e) {
     const error: ErrorMessage = {
       code: 'INTERNAL_SERVER_ERROR',
       message:
@@ -91,6 +84,25 @@ export let action: ActionFunction = async ({ request }) => {
       { status: 500 }
     );
   }
+  // const { error: errorInsertingUser } = await supabase
+  //   .from('user')
+  //   .insert({ id: (signUpData as User).id, role_id: role.id, name, email })
+  //   .single();
+
+  // if (errorInsertingUser) {
+  //   const error: ErrorMessage = {
+  //     code: 'INTERNAL_SERVER_ERROR',
+  //     message:
+  //       'Opa, tivemos um erro desconhecido. Por favor tente novamente mais tarde',
+  //   };
+  //
+  //   return json(
+  //     {
+  //       error,
+  //     },
+  //     { status: 500 }
+  //   );
+  // }
   return redirect('/bem-vindo-professor');
 };
 

@@ -1,5 +1,6 @@
 import { supabase } from '~/lib/supabase/supabase.server';
 import { ROLE_ENTITY_SELECT, RoleEntity } from '~/back/service/role.service';
+import { User } from '@supabase/supabase-js';
 
 export interface UserEntity {
   id: string;
@@ -16,6 +17,19 @@ export const USER_ENTITY_SELECT = `
   *,
   role(${ROLE_ENTITY_SELECT})
 `;
+
+export async function createUser(authUserId: string, roleId: string, name: string, email: string) {
+  const { data, error } = await supabase
+    .from('user')
+    .insert({ id: authUserId, role_id: roleId, name, email })
+    .select(USER_ENTITY_SELECT)
+    .single();
+  if (!data) {
+    if (error) throw new Error(error.message);
+    throw new Error('Unexpected Error');
+  }
+  return data;
+}
 
 export async function getUserById(id: string): Promise<UserEntity> {
   const { data, error } = await supabase
