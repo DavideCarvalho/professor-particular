@@ -1,7 +1,6 @@
 import { supabase } from '~/lib/supabase/supabase.server';
 import { USER_ENTITY_SELECT, UserEntity } from '~/back/service/user.service';
 import slug from 'slug';
-import { ROLE_ENTITY_SELECT } from '~/back/service/role.service';
 
 export interface ClassroomEntity {
   id: string;
