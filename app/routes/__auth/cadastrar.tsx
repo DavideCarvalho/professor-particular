@@ -7,6 +7,7 @@ import {
   SignUpFormValidator,
 } from '~/components/container/sign-up-form';
 import { validationError } from 'remix-validated-form';
+import { getRoleByName, RoleEntity } from '~/back/service/role.service';
 
 export interface SignInPageActionData {
   error?: ErrorMessage;
@@ -53,24 +54,21 @@ export let action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { data: role, error: errorFindingRole } = await supabase
-    .from('role')
-    .select('id')
-    .match({ name: 'PROFESSOR' })
-    .single();
+  // const { data: role, error: errorFindingRole } = await supabase
+  //   .from('role')
+  //   .select('id')
+  //   .match({ name: 'PROFESSOR' })
+  //   .single();
 
-  if (errorFindingRole) {
-    const error: ErrorMessage = {
-      code: 'INTERNAL_SERVER_ERROR',
-      message:
-        'Opa, tivemos um erro desconhecido. Por favor tente novamente mais tarde',
-    };
-
+  let role: RoleEntity;
+  try {
+    role = await getRoleByName('PROFESSOR');
+  } catch (e) {
     return json(
       {
         error,
       },
-      { status: 500 }
+      { status: 404 }
     );
   }
 
