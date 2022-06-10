@@ -18,7 +18,7 @@ const validator = withYup(
 );
 
 type SignUpFormProps = {
-  errorMessage?: string;
+  errorMessage?: string | undefined;
 };
 
 function SignUpForm({ errorMessage }: SignUpFormProps): ReactElement {
@@ -48,7 +48,7 @@ function SignUpForm({ errorMessage }: SignUpFormProps): ReactElement {
         <legend className="text-purple-600 pb-4 text-4xl border-b mb-4">
           Cadastro de professor
         </legend>
-        {errorMessage && <div className="h-3 text-xs">errorMessage</div>}
+        {errorMessage && <div className="h-3 text-xs">{errorMessage}</div>}
         <br />
         <div className="w-full mb-6">
           <CustomInput
