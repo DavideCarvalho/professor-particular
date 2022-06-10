@@ -83,7 +83,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 const AulaPage = () => {
   const { classroom, lessons, user } = useLoaderData<AulaPageLoaderData>();
   return (
-    <AppLayout>
+    <AppLayout user={user}>
       <h1 className="text-2xl">{classroom.name}</h1>
       <div className="divider" />
       {user.role.name === 'PROFESSOR' && (
@@ -183,7 +183,7 @@ const LessonCard: FC<any> = ({
       return;
     }
     const supabaseClient = await getSupabaseClient();
-    const file = event.target.files[0];
+    const file = event.target.files![0];
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = `${professorId}/${fileName}`;
