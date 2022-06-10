@@ -38,7 +38,7 @@ export let action: ActionFunction = async ({ request }) => {
       password?.toString()!
     );
 
-  if (!signUpData || !signUpError) {
+  if (!signUpData || signUpError) {
     const error: ErrorMessage = {
       code: 'INTERNAL_SERVER_ERROR',
       message:
