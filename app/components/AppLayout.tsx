@@ -1,20 +1,23 @@
-import { FC, PropsWithChildren, ReactElement } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { Form, Link, useTransition } from 'remix';
-import type { User } from '@supabase/supabase-js';
 import AppHeader from './AppHeader';
+import { UserEntity } from '~/back/service/user.service';
 
 type AppLayoutProps = {
-  user?: any;
+  user?: UserEntity;
 };
 
-export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
+export function AppLayout({
+  user,
+  children,
+}: PropsWithChildren<AppLayoutProps>): ReactElement {
   const transition = useTransition();
   return (
     <div className="drawer min-h-screen min-w-screen">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <div className="header">
-          <AppHeader user={user} />
+          <AppHeader />
         </div>
         <div className="container mx-auto">{children}</div>
       </div>
@@ -47,4 +50,4 @@ export const AppLayout: FC<AppLayoutProps> = ({ user, children }) => {
       </div>
     </div>
   );
-};
+}
