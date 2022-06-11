@@ -11,8 +11,13 @@ interface ChangePasswordActionData {
 
 export let meta: MetaFunction = () => {
   return {
-    title: 'Remix Starter Kit - Sign In or Sign Up',
-    description: 'Welcome to Remix Starter Kit',
+    title: 'Pró-fessor - Trocar senha',
+    description: 'Sistema para gestão de aulas particulares',
+    'og:site_name': 'Pró-Fessor',
+    'og:title': 'Pró-Fessor',
+    'og:description': 'Sistema para aulas particulares',
+    'og:type': 'website',
+    'og:image': 'https://professor-particular.vercel.app/',
   };
 };
 
