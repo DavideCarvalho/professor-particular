@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect, useLoaderData, Form, Link } from 'remix';
+import { LoaderFunction, redirect, useLoaderData, Form, Link, MetaFunction } from 'remix';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 import { Card } from '~/components/Card';
@@ -13,6 +13,18 @@ import {
   getClassroomsByProfessorId,
   getStudentClassrooms,
 } from '~/back/service/classroom.service';
+
+export let meta: MetaFunction = () => {
+  return {
+    title: 'Pró-fessor - Salas',
+    description: 'Sistema para gestão de aulas particulares',
+    'og:site_name': 'Pró-Fessor',
+    'og:title': 'Pró-Fessor',
+    'og:description': 'Sistema para aulas particulares',
+    'og:type': 'website',
+    'og:image': 'https://professor-particular.vercel.app/',
+  };
+};
 
 interface LoaderData {
   classrooms: ClassroomEntity[];
