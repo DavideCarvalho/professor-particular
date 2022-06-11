@@ -121,7 +121,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function ProfessorNewClassPage() {
-  const { user } = useLoaderData<{ user?: User }>();
+  const { user } = useLoaderData<{ user?: UserEntity }>();
   return (
     <AppLayout user={user}>
       <div className="flex flex-col justify-center items-center relative">
