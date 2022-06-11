@@ -89,7 +89,7 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     foundStudent = await getStudentByEmail(body.get('student_email') as string);
   } catch (e: any) {
-    if (e?.message !== 'User not found') {
+    if (e?.message !== 'Student not found') {
       return redirect('/salas');
     }
     await sendInviteEmailToStudent({
