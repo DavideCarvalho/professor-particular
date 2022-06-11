@@ -16,7 +16,7 @@ const WelcomeStudentPage = () => {
       <div className="flex flex-col w-full h-full justify-center content-center place-items-center">
         <PartyPopperEmoji className="h-64" />
         <h1 className="text-4xl font-bold">
-          Bem vindo aluno ao Professor Particular!
+          Bem vindo aluno ao Pró-fessor!
         </h1>
 
         <h1 className="text-2xl mt-10 break-words">
