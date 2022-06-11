@@ -58,8 +58,8 @@ export default function App() {
 export let loader: LoaderFunction = async ({ request }) => {
   return {
     ENV: {
-      SUPABASE_URL: process?.env?.SUPABASE_URL,
-      SUPABASE_KEY: process?.env?.SUPABASE_KEY,
+      NEXT_PUBLIC_SUPABASE_URL: process?.env?.NEXT_PUBLIC_SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process?.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   };
 };
