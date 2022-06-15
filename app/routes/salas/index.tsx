@@ -5,7 +5,7 @@ import { AppLayout } from '~/components/AppLayout';
 import { Card } from '~/components/Card';
 import { stripeClient } from '~/lib/stripe/stripe.server';
 import type { Stripe } from 'stripe';
-import { FC, useState } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import { ModalCannotCreateClassroom } from '~/components/modal-cannot-create-classroom';
 import { getUserById, UserEntity } from '~/back/service/user.service';
 import { getRoleById } from '~/back/service/role.service';
@@ -77,9 +77,15 @@ function isPaying(userPlanId?: string): boolean {
   );
 }
 
-const ButtonNewClassroom: FC<any> = ({ userPlanId, students }) => {
+function ButtonNewClassroom({
+  userPlanId,
+  classrooms,
+}: {
+  userPlanId?: string;
+  classrooms: ClassroomEntity[];
+}): ReactElement {
   const [showModal, setShowModal] = useState(false);
-  if (!isPaying(userPlanId) && students.length >= 2) {
+  if (!isPaying(userPlanId) && classrooms.length >= 2) {
     return (
       <>
         <ModalCannotCreateClassroom
@@ -97,7 +103,7 @@ const ButtonNewClassroom: FC<any> = ({ userPlanId, students }) => {
       + sala
     </Link>
   );
-};
+}
 
 export default function ProfessorStudentsPage() {
   const { classrooms, user, userPlanId } = useLoaderData<LoaderData>();
@@ -106,7 +112,7 @@ export default function ProfessorStudentsPage() {
       <div className="flex flex-col justify-center items-center relative">
         <h1 className="text-5xl">Suas salas</h1>
         <div className="flex justify-end w-full">
-          <ButtonNewClassroom userPlanId={userPlanId} students={classrooms} />
+          <ButtonNewClassroom userPlanId={userPlanId} classrooms={classrooms} />
         </div>
         <div className="py-8 grid grid-cols-1 w-full">
           <ClassroomCards
@@ -124,10 +130,10 @@ interface ClassroomCardsProps {
   isProfessor: boolean;
 }
 
-const ClassroomCards: FC<ClassroomCardsProps> = ({
+function ClassroomCards({
   classrooms,
   isProfessor,
-}) => {
+}: ClassroomCardsProps): ReactElement {
   return (
     <>
       {classrooms.map(({ name, slug, professor, student, id }) => (
@@ -141,4 +147,4 @@ const ClassroomCards: FC<ClassroomCardsProps> = ({
       ))}
     </>
   );
-};
+}
