@@ -69,7 +69,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   };
 };
 
-function isPaying(userPlanId: string): boolean {
+function isPaying(userPlanId?: string): boolean {
   return (
     !userPlanId ||
     userPlanId === 'price_1KTD3ZIgRgyZD761SGBTV0Xi' ||
