@@ -1,5 +1,5 @@
 
-import { MetaFunction } from "remix"
+import { MetaFunction } from "@remix-run/node";
 import SiteLayout from "~/components/SiteLayout";
 import StarterKit from "~/components/StarterKit";
 

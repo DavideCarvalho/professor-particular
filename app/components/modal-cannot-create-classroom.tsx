@@ -1,7 +1,7 @@
 import { FC, Fragment, MouseEventHandler, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { RiEdit2Line, RiFeedbackFill } from 'react-icons/ri';
-import { Link } from 'remix';
+import { Link } from "@remix-run/react";
 
 interface ModalCannotCreateClassroomProps {
   isOpen: boolean;

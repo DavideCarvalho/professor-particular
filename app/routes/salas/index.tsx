@@ -1,4 +1,5 @@
-import { LoaderFunction, redirect, useLoaderData, Form, Link, MetaFunction } from 'remix';
+import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 import { Card } from '~/components/Card';

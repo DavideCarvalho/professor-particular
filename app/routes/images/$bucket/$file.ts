@@ -1,4 +1,4 @@
-import { LoaderFunction } from 'remix';
+import { LoaderFunction } from "@remix-run/node";
 import { supabase } from '~/lib/supabase/supabase.server';
 
 export let loader: LoaderFunction = async ({ params }) => {

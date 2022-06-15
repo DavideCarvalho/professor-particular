@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
-import { Form, useSearchParams, useTransition } from 'remix';
+import { Form, useSearchParams, useTransition } from "@remix-run/react";
 
 export type AuthCreds = {
   email?: string;

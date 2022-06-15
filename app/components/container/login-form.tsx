@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
-import { Form, Link, useSearchParams, useTransition } from 'remix';
+import { Form, Link, useSearchParams, useTransition } from "@remix-run/react";
 import { withYup } from '@remix-validated-form/with-yup';
 import { ValidatedForm } from 'remix-validated-form';
 import { CustomInput } from '~/components/custom-input';

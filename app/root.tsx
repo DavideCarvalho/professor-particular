@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+
 import {
   Link,
   Links,
@@ -8,11 +10,10 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useLocation,
   useLoaderData,
+  useLocation,
   useMatches,
-} from 'remix';
-import type { LinksFunction, LoaderFunction } from 'remix';
+} from "@remix-run/react";
 
 import appStyleUrl from '~/styles/app.css';
 import { useEffect, useState } from 'react';

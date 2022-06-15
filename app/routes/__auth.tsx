@@ -1,4 +1,4 @@
-import { Outlet } from "remix"
+import { Outlet } from "@remix-run/react";
 import SiteLayout from "~/components/SiteLayout";
 import StarterKit from "~/components/StarterKit";
 

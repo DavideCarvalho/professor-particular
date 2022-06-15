@@ -1,5 +1,6 @@
-import type { ActionFunction } from 'remix';
-import { useActionData, MetaFunction, redirect, json } from 'remix';
+import type { ActionFunction } from "@remix-run/node";
+import { json, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 import { supabaseToken } from '~/cookies';
 import { supabase } from '~/lib/supabase/supabase.server';
 import {

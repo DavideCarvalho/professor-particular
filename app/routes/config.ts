@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from 'remix';
+import { json, LoaderFunction } from "@remix-run/node";
 import { isAuthenticated, getToken } from '~/lib/auth';
 
 export let loader: LoaderFunction = async ({ request }) => {

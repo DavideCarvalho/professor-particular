@@ -1,4 +1,4 @@
-import { ActionFunction, redirect } from 'remix';
+import { ActionFunction, redirect } from "@remix-run/node";
 import { supabase } from '~/lib/supabase/supabase.server';
 import { supabaseToken } from '~/cookies';
 import { getToken } from '~/lib/auth';

@@ -4,7 +4,8 @@ import {
   MdOutlineInfo,
   MdOutlineUploadFile,
 } from 'react-icons/md';
-import {Link, LoaderFunction, MetaFunction, redirect} from 'remix';
+import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { Form } from '@remix-run/react';
 
 export let meta: MetaFunction = () => {

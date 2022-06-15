@@ -1,10 +1,5 @@
-import {
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-  Form,
-  ActionFunction,
-} from 'remix';
+import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import { User } from '@supabase/supabase-js';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';

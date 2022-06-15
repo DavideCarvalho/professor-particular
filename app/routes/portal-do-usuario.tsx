@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect } from 'remix';
+import { LoaderFunction, redirect } from "@remix-run/node";
 import Stripe from 'stripe';
 import qs from 'qs';
 import { supabase } from '~/lib/supabase/supabase.server';

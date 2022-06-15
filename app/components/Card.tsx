@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Link } from 'remix';
+import { Link } from "@remix-run/react";
 
 interface CardProps {
   title: string;

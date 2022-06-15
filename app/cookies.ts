@@ -1,5 +1,5 @@
-import type { CookieOptions } from 'remix';
-import { createCookie } from 'remix';
+import type { CookieOptions } from "@remix-run/node";
+import { createCookie } from "@remix-run/node";
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,

@@ -1,14 +1,6 @@
 import { useState } from 'react';
-import {
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-  useActionData,
-  Form,
-  useTransition,
-  ActionFunction,
-  json,
-} from 'remix';
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { Form, useActionData, useLoaderData, useTransition } from "@remix-run/react";
 import { User } from '@supabase/supabase-js';
 import { supabase } from '~/lib/supabase/supabase.server';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';

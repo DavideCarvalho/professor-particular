@@ -1,5 +1,6 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { useActionData, MetaFunction, redirect, json } from 'remix';
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 import { AuthCreds } from '~/components/AuthForm';
 import { supabase } from '~/lib/supabase/supabase.server';
 import ChangePasswordForm from '~/components/change-password-form';

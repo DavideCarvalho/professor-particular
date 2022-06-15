@@ -1,4 +1,4 @@
-import { ActionFunction, json, LoaderFunction } from 'remix';
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import Stripe from 'stripe';
 import { supabase } from '~/lib/supabase/supabase.server';
 import { InvoicePaidStripeWebhookData } from '~/dto/invoice-paid-stripe-webhook.dto';

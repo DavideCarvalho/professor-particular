@@ -1,4 +1,5 @@
-import { LoaderFunction, redirect, useLoaderData, Link } from 'remix';
+import { LoaderFunction, redirect } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 import { User } from '@supabase/supabase-js';
 import { supabase } from '~/lib/supabase/supabase.server';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';

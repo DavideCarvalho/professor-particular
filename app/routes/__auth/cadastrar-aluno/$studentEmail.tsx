@@ -1,6 +1,7 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 import type { User } from '@supabase/supabase-js';
-import { useActionData, MetaFunction, redirect, json } from 'remix';
 import { AuthCreds } from '~/components/AuthForm';
 import { supabase } from '~/lib/supabase/supabase.server';
 import SignUpStudentForm from '~/components/SignUpStudentForm';
