@@ -6,6 +6,7 @@ import { supabase } from '~/lib/supabase/supabase.server';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { getSupabaseClient } from '~/lib/supabase/supabase.client';
 import { AppLayout } from '~/components/AppLayout';
+import { UserEntity } from '~/back/service/user.service';
 
 type ProfileAttrs = {
   name?: string;
@@ -64,8 +65,10 @@ export let action: ActionFunction = async ({ request }) => {
 
 export default function ProfileEdit() {
   const transition = useTransition();
-  const { profile, user } =
-    useLoaderData<{ profile: ProfileAttrs; user?: User }>();
+  const { profile, user } = useLoaderData<{
+    profile: ProfileAttrs;
+    user?: UserEntity;
+  }>();
   const errors = useActionData<ProfileAttrs>();
   const [avatarUrl, setAvatarUrl] = useState<string>(profile?.avatar_url || '');
   const [avatarLoading, setAvatarLoading] = useState<boolean>(false);
