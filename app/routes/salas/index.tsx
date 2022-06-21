@@ -1,5 +1,5 @@
-import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { Form, Link, useLoaderData } from '@remix-run/react';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 import { Card } from '~/components/Card';
@@ -111,9 +111,14 @@ export default function ProfessorStudentsPage() {
     <AppLayout user={user}>
       <div className="flex flex-col justify-center items-center relative">
         <h1 className="text-5xl">Suas salas</h1>
-        <div className="flex justify-end w-full">
-          <ButtonNewClassroom userPlanId={userPlanId} classrooms={classrooms} />
-        </div>
+        {user.role.name === 'PROFESSOR' && (
+          <div className="flex justify-end w-full">
+            <ButtonNewClassroom
+              userPlanId={userPlanId}
+              classrooms={classrooms}
+            />
+          </div>
+        )}
         <div className="py-8 grid grid-cols-1 w-full">
           <ClassroomCards
             classrooms={classrooms}
