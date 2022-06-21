@@ -5,7 +5,7 @@ import { RiFeedbackFill } from 'react-icons/ri';
 interface ModalChangeLessonLinkProps {
   isOpen: boolean;
   title: string;
-  link: string;
+  link?: string;
   onSubmit: (text: string) => void;
   close: MouseEventHandler<HTMLButtonElement>;
   onClose?: (value: boolean) => void;
@@ -19,7 +19,7 @@ export const ModalChangeLessonLink: FC<ModalChangeLessonLinkProps> = ({
   link,
   onSubmit,
 }) => {
-  const [editingLink, setEditingLink] = useState(link);
+  const [editingLink, setEditingLink] = useState(link || "");
   const cancelButtonRef = useRef(null);
 
   return (
