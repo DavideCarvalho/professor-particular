@@ -4,7 +4,7 @@ import { User } from '@supabase/supabase-js';
 import { isAuthenticated, getUserByRequestToken } from '~/lib/auth';
 import { AppLayout } from '~/components/AppLayout';
 import { getClassroomBySlugAndProfessorId } from '~/back/service/classroom.service';
-import { getProfessorById } from '~/back/service/user.service';
+import { getProfessorById, UserEntity } from '~/back/service/user.service';
 import { createLesson } from '~/back/service/lesson.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function ProfessorNewLessonPage() {
-  const { user } = useLoaderData<{ user?: User }>();
+  const { user } = useLoaderData<{ user?: UserEntity }>();
   return (
     <AppLayout user={user}>
       <div className="flex flex-col justify-center items-center relative">
