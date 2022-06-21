@@ -9,8 +9,8 @@ import { IconType } from 'react-icons';
 import { SiGooglemeet, SiMicrosoftteams } from 'react-icons/si';
 import { FaDiscord } from 'react-icons/fa';
 import { FiVideo } from 'react-icons/fi';
-import { LoaderFunction, redirect } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { LoaderFunction, redirect } from '@remix-run/node';
+import { Link, useLoaderData } from '@remix-run/react';
 import { AppLayout } from '~/components/AppLayout';
 import { getUserByRequestToken, isAuthenticated } from '~/lib/auth';
 import { getSupabaseClient } from '~/lib/supabase';
@@ -307,7 +307,7 @@ const LessonCard: FC<any> = ({
               const { error } = await supabase
                 .from('lesson')
                 .update({
-                  link: `https://${linkWithoutHttps}`,
+                  link: linkWithoutHttps ? `https://${linkWithoutHttps}` : '',
                 })
                 .match({ id });
               if (error) {
