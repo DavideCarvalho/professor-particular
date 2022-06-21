@@ -547,7 +547,7 @@ const AttachmentIcon: FC<AttachmentIconProps> = ({
   return (
     <>
       <button
-        className={`btn btn-ghost w-1/6 ${seeActions && 'blur-sm'} truncate`}
+        className={`btn btn-ghost ${seeActions && 'blur-sm'} truncate`}
         onClick={() => setSeeActions(true)}
       >
         <Icon />
