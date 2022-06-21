@@ -562,14 +562,14 @@ const AttachmentIcon: FC<AttachmentIconProps> = ({
             download={name}
             target="_blank"
             rel="noopener noreferrer"
-            className="grid-cols-1 btn btn-ghost btn-circle"
+            className="btn btn-ghost btn-circle"
           >
             <MdOpenInNew />
             <p>Visualizar</p>
           </a>
           {isProfessor && (
             <button
-              className="grid-cols-1 btn btn-ghost btn-circle"
+              className="btn btn-ghost btn-circle"
               onClick={() => handleDeleteFile()}
             >
               <AiFillDelete />
@@ -577,7 +577,7 @@ const AttachmentIcon: FC<AttachmentIconProps> = ({
             </button>
           )}
           <button
-            className="grid-cols-1 btn btn-ghost btn-circle"
+            className="btn btn-ghost btn-circle"
             onClick={() => setSeeActions(false)}
           >
             <TiCancel />
