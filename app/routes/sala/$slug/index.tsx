@@ -555,9 +555,7 @@ const AttachmentIcon: FC<AttachmentIconProps> = ({
       </button>
       {seeActions && (
         <div
-          className={`absolute grid grid-cols-${
-            isProfessor ? '3' : '2'
-          } gap-x-9`}
+          className={`absolute flex gap-x-9`}
         >
           <a
             href={url}
