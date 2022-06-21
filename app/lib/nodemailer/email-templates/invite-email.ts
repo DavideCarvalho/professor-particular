@@ -208,9 +208,10 @@ export const inviteEmail = `<!DOCTYPE html>
                           Seu professor {{ PROFESSOR_NAME }} te convidou para
                           aula de {{ CLASSROOM_NAME }}. Clique abaixo para se
                           cadastrar!
+                          {{ REGISTER_STUDENT_URL }}
                         </p>
                         <a
-                          href="https://example.com"
+                          href="{{ REGISTER_STUDENT_URL }}"
                           class="hover-bg-blue-600"
                           style="
                             display: inline-block;
