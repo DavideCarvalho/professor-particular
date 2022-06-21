@@ -35,7 +35,6 @@ export async function sendInviteEmailToStudent({
     html: inviteEmail
       .replace('{{ PROFESSOR_NAME }}', professorName)
       .replace('{{ CLASSROOM_NAME }}', classroomName)
-      .replace('{{ REGISTER_STUDENT_URL }}', registerStudentUrl)
       .replace('{{ REGISTER_STUDENT_URL }}', registerStudentUrl),
   });
 }
