@@ -52,7 +52,7 @@
     "autoprefixer": "10.4.7",
     "concurrently": "7.2.2",
     "cross-env": "7.0.3",
-    "daisyui": "2.15.4",
+    "daisyui": "2.17.0",
     "eslint": "8.18.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-remix": "0.0.2",
