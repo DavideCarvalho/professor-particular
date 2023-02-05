@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
 
 import {
   Link,
@@ -13,10 +13,10 @@ import {
   useLoaderData,
   useLocation,
   useMatches,
-} from "@remix-run/react";
+} from '@remix-run/react';
 
 import appStyleUrl from '~/styles/app.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 /**
  * The `links` export is a function that returns an array of objects that map to
@@ -60,7 +60,8 @@ export let loader: LoaderFunction = async ({ request }) => {
   return {
     ENV: {
       NEXT_PUBLIC_SUPABASE_URL: process?.env?.NEXT_PUBLIC_SUPABASE_URL,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process?.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY:
+        process?.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   };
 };

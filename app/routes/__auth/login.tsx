@@ -1,6 +1,6 @@
-import type { ActionFunction } from "@remix-run/node";
-import { json, MetaFunction, redirect } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import type { ActionFunction } from '@remix-run/node';
+import { json, MetaFunction, redirect } from '@remix-run/node';
+import { useActionData } from '@remix-run/react';
 import { supabaseToken } from '~/cookies';
 import { supabase } from '~/lib/supabase/supabase.server';
 import {
@@ -37,11 +37,13 @@ export let action: ActionFunction = async ({ request }) => {
   if (error) return validationError(error);
   const { email, password, redirect_to: redirectTo } = data;
 
-  const { data: session, error: sessionError } =
-    await supabase.auth.api.signInWithEmail(
-      email?.toString()!,
-      password?.toString()!
-    );
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.signInWithPassword({
+    email: email.toString(),
+    password: password.toString(),
+  });
 
   if (!session || sessionError) {
     if (sessionError?.message.toLowerCase() === 'invalid login credentials') {
