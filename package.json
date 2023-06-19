@@ -21,7 +21,7 @@
     "@remix-run/serve": "1.12.0",
     "@remix-run/vercel": "1.12.0",
     "@remix-validated-form/with-yup": "2.0.3",
-    "@stripe/react-stripe-js": "1.16.4",
+    "@stripe/react-stripe-js": "1.16.5",
     "@stripe/stripe-js": "1.46.0",
     "@supabase/supabase-js": "2.7.1",
     "@types/nodemailer": "6.4.7",
