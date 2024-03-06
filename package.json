@@ -38,7 +38,7 @@
     "remix-validated-form": "4.6.8",
     "slug": "8.2.2",
     "stripe": "11.9.1",
-    "yup": "0.32.11"
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "@remix-run/dev": "1.12.0",
